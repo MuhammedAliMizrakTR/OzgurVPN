@@ -121,7 +121,7 @@ Panel/abonelik HTTP'si Tunnel içindeki yerel origin içindir. Sıradan Trojan/T
 
 | Öğe | Kilit / SHA-256 |
 |---|---|
-| **Güncel yayın betiği** `trojan-panel-plan/mualiy-yayinla.py` | `347f20b5a4e3115891837a85b6a502e80100ef0235d5b6c6966152535efc8639` |
+| **Güncel yayın betiği** `trojan-panel-plan/mualiy-yayinla.py` | `ccf322cc91ea882fee62eed1e4d77a1f9b4d23690bde5a045c6bb0fb1ebdcf68` |
 | Eski native temizliği `mualiy-eski-servis-temizle.py` | `cc6e788ab286ecd83997872eccbd5837eccf5428274a6e5326162efab99d6bb8` |
 | **Yeniden çalıştırılmayacak** bootstrap `mualiy-sui-panel.sh` | `5a8196b98fd6a8bac3bf3ac80cae37849cc0007de7ff45bb7a29b7b0c72507a2` |
 | S-UI image | `alireza7/s-ui:v1.6.7@sha256:c262ebd5cd53fd098d3080089af46220473bacbaf1a113e767aa9aadd2eed36d` |
@@ -129,7 +129,7 @@ Panel/abonelik HTTP'si Tunnel içindeki yerel origin içindir. Sıradan Trojan/T
 | Ayrı connector image | `cloudflare/cloudflared:2026.11.0@sha256:b94b96edf2c9c4360f8879c8580cfaa99077f19c849ec595ca2f711b27d4f344` |
 | Pasif Wattpad aday config'i | `73630be4566251163de982b4379efba224d5a567f7a2af83ea3c9a3ccb671b0d` |
 
-Image digest/platform kayıtları önceki araştırmada incelendi; **bu sandbox'ta Docker image çalıştırılması anlamına gelmez**. Sabitleme, sürümün sonsuza dek güvenli olduğu iddiası değildir. Bu devirde üç operasyon/kurulum betiğinin baytları değiştirilmedi; taşınabilirlik düzenlemeleri testlerde ve belgelerde yapıldı.
+Image digest/platform kayıtları önceki araştırmada incelendi; **bu sandbox'ta Docker image çalıştırılması anlamına gelmez**. Sabitleme, sürümün sonsuza dek güvenli olduğu iddiası değildir. Yayın betiği değiştiğinde Termux başlatıcısındaki kaynak commit'i ve SHA-256 pini birlikte güncellenir; taşınabilirlik düzenlemeleri testlerde ve belgelerde de doğrulanır.
 
 ## 4. Güvenlik kuralları
 
@@ -186,7 +186,7 @@ Panel durmuşsa önce beklenen proje/compose/mount yapısını doğrula; yalnız
 Yalnız güncel dosya VDS'ye `/home/neo/mualiy-yayinla.py` olarak aktarıldıktan ve kısa durum/Cloudflare ön koşulları değerlendirildikten sonra:
 
 ```bash
-printf '%s\n' '347f20b5a4e3115891837a85b6a502e80100ef0235d5b6c6966152535efc8639  /home/neo/mualiy-yayinla.py' | sha256sum -c - &&
+printf '%s\n' 'ccf322cc91ea882fee62eed1e4d77a1f9b4d23690bde5a045c6bb0fb1ebdcf68  /home/neo/mualiy-yayinla.py' | sha256sum -c - &&
 sudo python3 /home/neo/mualiy-yayinla.py --apply
 ```
 
@@ -314,7 +314,7 @@ repo-koku/
 ├── README.md                     ← bu tek kapsamlı devir belgesi
 ├── .gitignore                    ← yeni public-kaynak hijyeni
 ├── DEVIR_TEST_SONUCLARI.json      ← bu devirde yeniden yapılan kontroller
-├── SHA256SUMS                    ← aşağıdaki 78 dosyanın bütünü için sağlama
+├── SHA256SUMS                    ← diğer 83 izlenen dosyanın bütünü için sağlama
 ├── trojan-panel-plan/            ← GÜNCEL yayın + sınırlı temizlik + tarihçe
 ├── wattpad-inceleme/              ← seçilmiş aday ve kanıt; otomatik uygulama yok
 ├── vds-baslangic/                 ← tarihsel ön kontrol ve barındırma araştırması
@@ -324,27 +324,32 @@ repo-koku/
 
 **Durum kodları:** **AKTİF** güncel devamda kullanılabilir; **KOŞULLU** yalnız belirtilen kapsam/yetkiyle; **TEST** test kaynağı; **KANIT** tarihsel sonuç; **ARŞİV** güncel VDS'ye uygulanmayacak tarihçe/prototip; **ARAŞTIRMA** yeniden doğrulanması gereken not; **META** envanter/bütünlük/lisans. Arşiv kodları “şimdi kurulacak alternatif” değildir.
 
-### 7.1 Kök — 4 dosya
+### 7.1 Kök — 5 dosya
 
 | Dosya | Durum | Amaç / neden tutuldu? |
 |---|---|---|
 | `README.md` | AKTİF | Bu kapsamlı devir: hedef, durum, kurallar, görev/istemler, tüm dosya envanteri, çıkarılanlar ve yükleme yöntemi |
+| `LICENSE` | META | Önceden var olan kök lisans kaydı; alt ağaçlardaki lisans ve üçüncü taraf bildirimleri ayrıca korunur |
 | `.gitignore` | META | Token/DB/anahtar/client export'u, ham yükleme, cache/log ve ZIP'lerin yanlışlıkla eklenmesini azaltır; güvenlik garantisi değildir |
 | `DEVIR_TEST_SONUCLARI.json` | KANIT — DEVİR YEREL | Bu temiz kopyada yeniden yapılan 87 test, Go ve native fixture/statik/secret-review sonuçları ile yapılmayanların makine okunur özeti |
-| `SHA256SUMS` | META | Kendi dışındaki78 dosyanın SHA-256'sı; bütünlük kontrolüdür, kriptografik yayıncı imzası değildir |
+| `SHA256SUMS` | META | Kendi dışındaki izlenen kaynak dosyalarının SHA-256'sı; bütünlük kontrolüdür, kriptografik yayıncı imzası değildir |
 
-### 7.2 `trojan-panel-plan/` — 16 dosya
+### 7.2 `trojan-panel-plan/` — 20 dosya
 
 | Dosya | Durum | Amaç / neden tutuldu? |
 |---|---|---|
 | `mualiy-yayinla.py` | **AKTİF** | Mevcut paneli doğrular; özel yedek, DNS-01 CA, S-UI API TLS/Trojan/client,8443, ayrı Tunnel, yenileme ve özel link export'u. Root/TTY ve açık `--apply`; gerçek değişiklik yapar |
-| `HIZLI_YAYIN.md` | **AKTİF** | Güncel yayın rehberi; Access/YENİ Tunnel/dar DNS token, UA düzeltmesi, kullanım ve kanıt sınırları. Hazır ayarları tekrarlamama/reboot sonrası devam notu eklendi |
+| `termux-yayin-baslat.sh` | **AKTİF** | Termux/VDS için kopyala-yapıştır başlatıcı. Sabit main commit'indeki yayın dosyasını HTTPS+SHA-256 ile doğrular; `curl | sh` kullanmaz, sembolik/beklenmeyen hedefi ezmez ve TTY dışında yayın başlatmaz |
+| `mualiy-sifirla-ve-yayinla.py` | **KOŞULLU — AÇIK RESET ONAYI** | Yalnız açık sıfırdan kurulum onayında, doğrulanmış eski Mualiy panel/tunnel state'ini silmeden root-özel arşive taşır; loopback yeni panel/admin kurar ve ardından SHA-256 doğrulanmış normal yayın aracını başlatır. Bilinmeyen mount/label/state'te durur |
+| `HIZLI_YAYIN.md` | **AKTİF** | Güncel yayın rehberi; Access/YENİ Tunnel/dar DNS token, UA düzeltmesi, Termux başlatıcı, açık onaylı reset istisnası, kullanım ve kanıt sınırları. Hazır ayarları tekrarlamama/reboot sonrası devam notu eklendi |
 | `durum.json` | **AKTİF** | Taşınabilir makine özeti; son kullanıcı reboot26.04.1 bildirimi, kesin seçimler, korunacaklar ve açık işler. Stale yinelenen upgrade anlatımı yerine son durum normalize edildi |
 | `mualiy-eski-servis-temizle.py` | KOŞULLU | Yetki verilmiş dört ESKİ native birimi/doğrulanmış yolları kontrol eder ve root-özel arşive taşır; yeni paneli korur. `--check` varsayılan, `--apply` değişiklik yapar; uzak sonuç bilinmiyor |
 | `ESKI_SERVIS_TEMIZLIGI.md` | KOŞULLU | Eski native kapsamı, korumalar, arşiv ve sınırlamalar; yayın öncesi gereksiz geniş temizlik kapısı değildir |
 | `mualiy-sui-panel.sh` | **ARŞİV — YENİDEN ÇALIŞTIRMA** | İlk loopback panelinin özgün kurucusu. Beklenen Compose/marker/UID yapısını denetleyebilmek ve fixture testleri için tutuldu; mevcut VDS'yi yeniden kurmak için değil |
 | `PANEL_ILK_ASAMA.md` | ARŞİV | İlk panelin mimari kayıt belgesi. Yeniden kurulum komutları/varsayılan parola çıkarıldı; DB/mount/restart:no gerekçesi ve açık tarihçe uyarısı kaldı |
-| `tests/test_publish_safety.py` | TEST |16 offline guard: doğru panel/port, local Docker socket, bilinmeyen port sahibine dokunmama, secret-file, TLS çakışması ve Access/UA reddetme kontrolleri; geçici yol taşınabilir yapıldı |
+| `tests/test_publish_safety.py` | TEST |17 offline guard: doğru panel/port, local Docker socket, bilinmeyen port sahibine dokunmama, secret-file, TLS çakışması, Access/UA reddetme ve ilk Trojan kullanıcısının inbound oluşturulurken eklenmesi kontrolleri; geçici yol taşınabilir yapıldı |
+| `tests/test_termux_launcher.py` | TEST |GitHub erişimi/sudo olmadan fake `curl` ile başlatıcının SHA-256 doğrulamasını, dry-run'ın hedefe dokunmamasını ve TTY dışındaki yayının engellenmesini denetler |
+| `tests/test_fresh_reset.py` | TEST |Gerçek Docker/VDS kullanmadan reset aracının loopback compose yapısını, sahiplik işareti/mount korumalarını, arşivleyerek korumayı, yeni admin doğrulamasını, yayıncı SHA-256 pinini ve sır/tehlikeli silme korumalarını denetler |
 | `tests/test_publish_native.py` | TEST — AÇIK OPT-IN | Linux amd64, non-root gerçek native fixture; `--binary`/`SUI_TEST_BINARY`, kesin binary hash, loopback, geçici DB/CA ve isteğe bağlı **yeni** rapor. Binary indirmez, canlı VDS kullanmaz, tarihsel raporu ezmez |
 | `tests/test_cleanup.py` | TEST |20 offline cleanup fixture; gerçek Docker/systemctl çalışmaz, fake dosyalar geçici dizindedir; yeni panel/mount/process/alias korumalarını denetler |
 | `tests/test_bootstrap.py` | TEST / ARŞİV |14 ilk-kurucu fixture testi. Hedef/lock geçici yola çevrilir ve Docker/curl/ss mock'tur. `install -o/-g` için root gerekir; yalnız atılabilir test ortamında, VDS'de değil |
@@ -352,7 +357,7 @@ repo-koku/
 | `ACCESS_DUZELTME_TEST.json` | KANIT — ÖNCEKİ YEREL | urllib403 / setupUA302 farkı, eski/yeni betik hash'i ve önceki kamu DNS/Access gözlemi; ham ekran görüntüsü yok, güncel VDS tekrar denemesi kanıtı değil |
 | `TEMIZLIK_TEST_SONUCLARI.json` | KANIT — ÖNCEKİ YEREL | Temizlik aracının önceki20 mock testi/derleme/non-root koruması ve uzak sonucun bilinmediği kaydı |
 | `TEST_SONUCLARI.json` | KANIT — ÖNCEKİ YEREL | İlk bootstrap14 mock testi ve ayrı upstream native smoke; kullanıcının panel/şifre bildirimi. Mevcut Docker runtime doğrulaması değildir |
-| `SHA256SUMS` | META | Bu klasördeki diğer 15 dosyanın güncellenmiş manifesti; `cd trojan-panel-plan && sha256sum -c SHA256SUMS` |
+| `SHA256SUMS` | META | Bu klasördeki diğer 19 dosyanın güncellenmiş manifesti; `cd trojan-panel-plan && sha256sum -c SHA256SUMS` |
 
 ### 7.3 `wattpad-inceleme/` — 3 dosya
 
@@ -549,7 +554,7 @@ sha256sum -c SHA256SUMS
 (cd free-vpn-engineering && sha256sum -c PROJECT_MANIFEST.sha256)
 ```
 
-Her düzenlemeden sonra ilgili alt manifesti, sonra kök manifesti yenile. Manifest hash'i dosya bozulmasını yakalar; paketin güvenilir bir kişiden geldiğini tek başına ispatlamaz. ZIP container sağlamlığı ve arşiv içerik eşitliği son paketlemede ayrıca denetlendi; dosya sayısı79'dur.
+Her düzenlemeden sonra ilgili alt manifesti, sonra kök manifesti yenile. Manifest hash'i dosya bozulmasını yakalar; paketin güvenilir bir kişiden geldiğini tek başına ispatlamaz. ZIP container sağlamlığı ve arşiv içerik eşitliği son paketlemede ayrıca denetlendi; izlenen dosya sayısı84'tür.
 
 ## 10. GitHub'a yapıyı bozmadan yükleme
 
