@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Offline guards for fresh-panel reset scope; Docker and VDS are never used."""
+import hashlib
 import importlib.util
 import os
 from pathlib import Path
@@ -9,6 +10,7 @@ from unittest.mock import patch
 
 BASE = Path(__file__).resolve().parents[1]
 SCRIPT = BASE / 'mualiy-sifirla-ve-yayinla.py'
+PUBLISHER = BASE / 'mualiy-yayinla.py'
 spec = importlib.util.spec_from_file_location('fresh_reset', SCRIPT)
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
@@ -104,6 +106,10 @@ class FreshResetTests(unittest.TestCase):
         api = m.LocalAPI()
         self.assertEqual(api.base, 'http://127.0.0.1:2095/app/api/')
         self.assertIsNotNone(api.http)
+
+    def test_reset_publisher_pin_matches_current_publisher(self):
+        self.assertEqual(m.PUBLISHER_NAME, 'mualiy-yayinla-ccf322cc.py')
+        self.assertEqual(m.PUBLISHER_SHA256, hashlib.sha256(PUBLISHER.read_bytes()).hexdigest())
 
     def test_no_secret_command_line_or_destructive_wildcard(self):
         source = SCRIPT.read_text()

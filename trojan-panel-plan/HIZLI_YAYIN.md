@@ -69,7 +69,7 @@ Certbot'un DNS-01 eklentisi bu dar kapsamlı token ile doğrulama yapabilir; 80/
 
 ## 2. Termux için tek-yapıştır başlatıcı
 
-Telefonda dosya aktarmak yerine bu paketteki `termux-yayin-baslat.sh` başlatıcısı kullanılabilir. Başlatıcı, yayın aracını GitHub'daki sabit **`1a90c64f529d687f32476971764244eb1a654b2a`** commit'inden HTTPS ile indirir ve **`347f20b5a4e3115891837a85b6a502e80100ef0235d5b6c6966152535efc8639`** SHA-256 değeriyle doğrular. `curl | sh` kullanmaz; önceki elle aktarılmış `~/mualiy-yayinla.py` dosyasına hiç dokunmaz. Doğrulanmış yeni kopya ayrı, sürüm sabitli `~/mualiy-yayinla-347f20b5.py` yoluna yazılır; o yol zaten varsa da beklenmeyen veya sembolik linkli dosyanın üstüne yazmaz.
+Telefonda dosya aktarmak yerine bu paketteki `termux-yayin-baslat.sh` başlatıcısı kullanılabilir. Başlatıcı, yayın aracını GitHub'daki sabit **`452833b0e4a3bd91ee643de02a884731a052c572`** commit'inden HTTPS ile indirir ve **`ccf322cc91ea882fee62eed1e4d77a1f9b4d23690bde5a045c6bb0fb1ebdcf68`** SHA-256 değeriyle doğrular. `curl | sh` kullanmaz; önceki elle aktarılmış `~/mualiy-yayinla.py` dosyasına hiç dokunmaz. Doğrulanmış yeni kopya ayrı, sürüm sabitli `~/mualiy-yayinla-ccf322cc.py` yoluna yazılır; o yol zaten varsa da beklenmeyen veya sembolik linkli dosyanın üstüne yazmaz.
 
 Önce yalnız indirme/bütünlük yolunu denemek için VDS'de normal kullanıcıyla, doğrudan terminalde:
 
@@ -83,7 +83,7 @@ Bu mod paneli, Docker'ı, Cloudflare'ı veya hedef dosyayı değiştirmez. Başa
 bash ~/mualiy-yayin-baslat.sh --apply
 ```
 
-`--apply` doğrulanmış yayın dosyasını `~/mualiy-yayinla-347f20b5.py` olarak kaydeder, yalnız yerel `sudo` şifresini ister ve sonra yayın aracını TTY'de başlatır. Bu başlatıcı **Access uygulaması, yeni Tunnel route'u veya DNS kaydını oluşturmaz**; Bölüm 1'deki yapılmamış Cloudflare ön koşulları önce tamamlanmalıdır. Başlatıcının kendisini VDS'ye aktaracak kopyala-yapıştır bloğu, paketle birlikte verilmelidir; token/parola/link o bloğa eklenmez.
+`--apply` doğrulanmış yayın dosyasını `~/mualiy-yayinla-ccf322cc.py` olarak kaydeder, yalnız yerel `sudo` şifresini ister ve sonra yayın aracını TTY'de başlatır. Bu başlatıcı **Access uygulaması, yeni Tunnel route'u veya DNS kaydını oluşturmaz**; Bölüm 1'deki yapılmamış Cloudflare ön koşulları önce tamamlanmalıdır. Başlatıcının kendisini VDS'ye aktaracak kopyala-yapıştır bloğu, paketle birlikte verilmelidir; token/parola/link o bloğa eklenmez.
 
 ## 3. Tek dosya, tek çalıştırma — manuel alternatif
 
@@ -92,7 +92,7 @@ Başlatıcı kullanılamıyorsa, `mualiy-yayinla.py` dosyasını VDS'de **`/home
 VDS terminalinde:
 
 ```bash
-printf '%s\n' '347f20b5a4e3115891837a85b6a502e80100ef0235d5b6c6966152535efc8639  /home/neo/mualiy-yayinla.py' | sha256sum -c - &&
+printf '%s\n' 'ccf322cc91ea882fee62eed1e4d77a1f9b4d23690bde5a045c6bb0fb1ebdcf68  /home/neo/mualiy-yayinla.py' | sha256sum -c - &&
 sudo python3 /home/neo/mualiy-yayinla.py --apply
 ```
 

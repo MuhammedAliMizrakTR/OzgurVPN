@@ -9,7 +9,7 @@ import unittest
 BASE = Path(__file__).resolve().parents[1]
 LAUNCHER = BASE / 'termux-yayin-baslat.sh'
 PUBLISHER = BASE / 'mualiy-yayinla.py'
-EXPECTED_SHA256 = '347f20b5a4e3115891837a85b6a502e80100ef0235d5b6c6966152535efc8639'
+EXPECTED_SHA256 = 'ccf322cc91ea882fee62eed1e4d77a1f9b4d23690bde5a045c6bb0fb1ebdcf68'
 
 
 class TermuxLauncherTests(unittest.TestCase):
@@ -36,7 +36,7 @@ class TermuxLauncherTests(unittest.TestCase):
     def test_shell_syntax_and_pinned_source(self):
         subprocess.run(['bash', '-n', str(LAUNCHER)], check=True)
         text = LAUNCHER.read_text()
-        self.assertIn("readonly SOURCE_COMMIT='1a90c64f529d687f32476971764244eb1a654b2a'", text)
+        self.assertIn("readonly SOURCE_COMMIT='452833b0e4a3bd91ee643de02a884731a052c572'", text)
         self.assertIn(EXPECTED_SHA256, text)
         self.assertIn('raw.githubusercontent.com/MuhammedAliMizrakTR/OzgurVPN/', text)
         self.assertIn("curl --proto '=https' --tlsv1.2", text)
@@ -57,7 +57,7 @@ class TermuxLauncherTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory) / 'home'
             home.mkdir()
-            target = home / 'mualiy-yayinla-347f20b5.py'
+            target = home / 'mualiy-yayinla-ccf322cc.py'
             target.write_text('not the checksum-pinned publisher\n')
             result = self.run_launcher(home, '--dry-run')
             self.assertNotEqual(result.returncode, 0)
@@ -73,7 +73,7 @@ class TermuxLauncherTests(unittest.TestCase):
             result = self.run_launcher(home, '--dry-run')
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(legacy.read_text(), 'older manually transferred publisher\n')
-            self.assertFalse((home / 'mualiy-yayinla-347f20b5.py').exists())
+            self.assertFalse((home / 'mualiy-yayinla-ccf322cc.py').exists())
 
     def test_apply_requires_tty_before_any_target_write(self):
         with tempfile.TemporaryDirectory() as directory:
