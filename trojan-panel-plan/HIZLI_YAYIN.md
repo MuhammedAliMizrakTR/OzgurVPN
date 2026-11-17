@@ -69,7 +69,7 @@ Certbot'un DNS-01 eklentisi bu dar kapsamlı token ile doğrulama yapabilir; 80/
 
 ## 2. Termux için tek-yapıştır başlatıcı
 
-Telefonda dosya aktarmak yerine bu paketteki `termux-yayin-baslat.sh` başlatıcısı kullanılabilir. Başlatıcı, yayın aracını GitHub'daki sabit **`8e52da1033b4971bc8a881e6601f8c3d38bb9e2e`** commit'inden HTTPS ile indirir ve **`c1501cb8dade1e8583f256b1f02dc2c69e02beb6f4ea603550ba59d42679ab17`** SHA-256 değeriyle doğrular. `curl | sh` kullanmaz; önceki elle aktarılmış `~/mualiy-yayinla.py` dosyasına hiç dokunmaz. Doğrulanmış yeni kopya ayrı, sürüm sabitli `~/mualiy-yayinla-c1501cb8.py` yoluna yazılır; o yol zaten varsa da beklenmeyen veya sembolik linkli dosyanın üstüne yazmaz.
+Telefonda dosya aktarmak yerine bu paketteki `termux-yayin-baslat.sh` başlatıcısı kullanılabilir. Başlatıcı, yayın aracını GitHub'daki sabit **`a59ca8066976a2d904c010bdf9c7f1ba5ad8542f`** commit'inden HTTPS ile indirir ve **`7e5d51dec9be2858abf5d6484602f2cf351b043c1fea77925f22929d7fb07f5e`** SHA-256 değeriyle doğrular. `curl | sh` kullanmaz; önceki elle aktarılmış `~/mualiy-yayinla.py` dosyasına hiç dokunmaz. Doğrulanmış yeni kopya ayrı, sürüm sabitli `~/mualiy-yayinla-7e5d51de.py` yoluna yazılır; o yol zaten varsa da beklenmeyen veya sembolik linkli dosyanın üstüne yazmaz.
 
 Önce yalnız indirme/bütünlük yolunu denemek için VDS'de normal kullanıcıyla, doğrudan terminalde:
 
@@ -83,7 +83,7 @@ Bu mod paneli, Docker'ı, Cloudflare'ı veya hedef dosyayı değiştirmez. Başa
 bash ~/mualiy-yayin-baslat.sh --apply
 ```
 
-`--apply` doğrulanmış yayın dosyasını `~/mualiy-yayinla-c1501cb8.py` olarak kaydeder, yalnız yerel `sudo` şifresini ister ve sonra yayın aracını TTY'de başlatır. Bu başlatıcı **Access uygulaması, yeni Tunnel route'u veya DNS kaydını oluşturmaz**; Bölüm 1'deki yapılmamış Cloudflare ön koşulları önce tamamlanmalıdır. Başlatıcının kendisini VDS'ye aktaracak kopyala-yapıştır bloğu, paketle birlikte verilmelidir; token/parola/link o bloğa eklenmez.
+`--apply` doğrulanmış yayın dosyasını `~/mualiy-yayinla-7e5d51de.py` olarak kaydeder, yalnız yerel `sudo` şifresini ister ve sonra yayın aracını TTY'de başlatır. Bu başlatıcı **Access uygulaması, yeni Tunnel route'u veya DNS kaydını oluşturmaz**; Bölüm 1'deki yapılmamış Cloudflare ön koşulları önce tamamlanmalıdır. Başlatıcının kendisini VDS'ye aktaracak kopyala-yapıştır bloğu, paketle birlikte verilmelidir; token/parola/link o bloğa eklenmez.
 
 ## 3. Tek dosya, tek çalıştırma — manuel alternatif
 
@@ -92,7 +92,7 @@ Başlatıcı kullanılamıyorsa, `mualiy-yayinla.py` dosyasını VDS'de **`/home
 VDS terminalinde:
 
 ```bash
-printf '%s\n' 'c1501cb8dade1e8583f256b1f02dc2c69e02beb6f4ea603550ba59d42679ab17  /home/neo/mualiy-yayinla.py' | sha256sum -c - &&
+printf '%s\n' '7e5d51dec9be2858abf5d6484602f2cf351b043c1fea77925f22929d7fb07f5e  /home/neo/mualiy-yayinla.py' | sha256sum -c - &&
 sudo python3 /home/neo/mualiy-yayinla.py --apply
 ```
 
@@ -109,6 +109,7 @@ Betik sırasıyla yerelde şunları sorar:
 
 - Mevcut `mualiy-sui/panel` health ve DB/cert mount bilgilerini, sabit image/UID'yi ve loopback yönetim portlarını kontrol eder.
 - DB'de `mualiy-trojan` yoksa, önceki başarısız hot-add girişiminden kalmış olabilecek yalnız çalışma belleğindeki inbound'ı temizlemek için **yalnız doğrulanmış paneli** yeniden başlatır; DB, sertifika ve özel state silinmez.
+- Cert/key içeriği değişmemiş olsa bile yalnız doğrulanmış `/app/cert` bind kaynağının root:10001/0750 dizin ve root:10001/0640 dosya izinlerini onarır; sonra panel kullanıcısının iki dosyayı okuyabildiğini doğrular. Okunamıyorsa inbound API çağrısından önce durur.
 - İnternetten Access giriş yönlendirmesini görmeden yeni connector'ı başlatmaz. E-posta izin politikasını dashboardda yine sen doğru sınırlandırmalısın.
 - Panel API'sinden tutarlı DB yedeği ve Compose yedeği alır; root'a özel tutar.
 - DNS-01 ile `vpn.mualiy.net` için gerçek CA sertifikası alır; anahtar ve sertifikayı doğru UID/GID erişimiyle bağlar.
