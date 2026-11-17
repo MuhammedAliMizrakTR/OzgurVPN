@@ -253,6 +253,28 @@ def configure_api(api, state, cert_path='/app/cert/mualiy-fullchain.pem', key_pa
     state['tls_id'] = tls_rec['id']
 
 
+def reconcile_core_if_missing_inbound(api, cid):
+    """Clear an unsaved hot-added inbound before retrying its DB transaction."""
+    if any(inbound.get('tag') == TAG for inbound in api.items('inbounds')):
+        return False
+    # S-UI adds a live inbound before its DB transaction commits. A failed
+    # earlier attempt can therefore leave a private, unpersisted core inbound
+    # with TAG. Restart only the already-verified panel to make its core match
+    # the DB before retrying; this does not delete DB, cert, or live state.
+    print('Kayitsiz onceki core durumu temizleniyor; yalniz mualiy-sui paneli DB ile yeniden baslatiliyor...')
+    command(['docker', 'restart', '-t', '20', cid], timeout=90)
+    deadline = time.monotonic() + 120
+    last_error = None
+    while time.monotonic() < deadline:
+        try:
+            panel_id()
+            return True
+        except Stop as error:
+            last_error = error
+            time.sleep(2)
+    raise Stop('Yalniz mualiy-sui paneli yeniden baslatildi ama 120 saniyede healthy olmadi; tekrar API denemesi yapilmadi.') from last_error
+
+
 def free_port_or_stop_old(cid):
     # If an existing managed panel is already published, a rerun may continue.
     bindings = json.loads(command(['docker', 'inspect', '-f', '{{json .HostConfig.PortBindings}}', cid]).stdout) or {}
@@ -471,6 +493,8 @@ def apply():
     deploy_cert()
     free_port_or_stop_old(cid)
     api = API(user, password)  # Refresh a session after a slow image/ACME download.
+    if reconcile_core_if_missing_inbound(api, cid):
+        api = API(user, password)  # Container restart invalidates the local API session.
     configure_api(api, state)
     save_state(state)
     # Publish only Trojan; keep both admin/subscription loopback-only.

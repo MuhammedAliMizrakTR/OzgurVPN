@@ -115,6 +115,28 @@ class SafetyTests(unittest.TestCase):
             def add(self,*a):raise AssertionError('must not mutate conflicting record')
         with self.assertRaises(m.Stop):m.configure_api(FakeAPI(),{'client_name':'fixture','trojan_password':'fixture'})
 
+    def test_missing_database_inbound_restarts_only_verified_panel(self):
+        class FakeAPI:
+            def items(self, kind):
+                if kind != 'inbounds':
+                    raise AssertionError(kind)
+                return []
+        calls = []
+        with patch.object(m, 'command', side_effect=lambda args, **kw: calls.append(args)), \
+             patch.object(m, 'panel_id', return_value=(CID, {})) as panel:
+            self.assertTrue(m.reconcile_core_if_missing_inbound(FakeAPI(), CID))
+        self.assertEqual(calls, [['docker', 'restart', '-t', '20', CID]])
+        panel.assert_called_once_with()
+
+    def test_persisted_database_inbound_does_not_restart_panel(self):
+        class FakeAPI:
+            def items(self, kind):
+                if kind != 'inbounds':
+                    raise AssertionError(kind)
+                return [{'tag': m.TAG}]
+        with patch.object(m, 'command', side_effect=AssertionError('must not restart panel')):
+            self.assertFalse(m.reconcile_core_if_missing_inbound(FakeAPI(), CID))
+
     def test_first_trojan_client_is_created_before_inbound(self):
         class FakeAPI:
             def __init__(self):
