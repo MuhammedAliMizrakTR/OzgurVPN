@@ -73,7 +73,7 @@
   },
   "yayin_araci": {
     "betik": "mualiy-yayinla.py",
-    "sha256": "ccf322cc91ea882fee62eed1e4d77a1f9b4d23690bde5a045c6bb0fb1ebdcf68",
+    "sha256": "c1501cb8dade1e8583f256b1f02dc2c69e02beb6f4ea603550ba59d42679ab17",
     "rehber": "HIZLI_YAYIN.md",
     "son_uzak_durum": "Kullanıcı ekran görüntüsündeki deneme check_access aşamasında durdu; o denemede API/ACME/Trojan'a geçilmedi. User-Agent düzeltmesi teslim edildi; VDS'deki yeniden deneme sonucu bilinmiyor.",
     "access_duzeltmesi": {

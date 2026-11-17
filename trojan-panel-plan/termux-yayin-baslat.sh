@@ -4,11 +4,11 @@
 # It never accepts or prints panel, Cloudflare, tunnel, or Trojan secrets.
 set -Eeuo pipefail
 
-readonly SOURCE_COMMIT='452833b0e4a3bd91ee643de02a884731a052c572'
-readonly SOURCE_SHA256='ccf322cc91ea882fee62eed1e4d77a1f9b4d23690bde5a045c6bb0fb1ebdcf68'
+readonly SOURCE_COMMIT='8e52da1033b4971bc8a881e6601f8c3d38bb9e2e'
+readonly SOURCE_SHA256='c1501cb8dade1e8583f256b1f02dc2c69e02beb6f4ea603550ba59d42679ab17'
 readonly SOURCE_URL="https://raw.githubusercontent.com/MuhammedAliMizrakTR/OzgurVPN/${SOURCE_COMMIT}/trojan-panel-plan/mualiy-yayinla.py"
 # Do not replace a manually transferred or older launcher at ~/mualiy-yayinla.py.
-readonly DESTINATION="${HOME:?HOME gerekli}/mualiy-yayinla-ccf322cc.py"
+readonly DESTINATION="${HOME:?HOME gerekli}/mualiy-yayinla-c1501cb8.py"
 
 die() {
     printf 'DUR: %s\n' "$*" >&2
@@ -23,7 +23,7 @@ Kullanim:
 
 --dry-run yalnız GitHub'dan sabitlenmiş kaynak indirme + SHA-256 doğrular;
 VDS paneli, Docker, Cloudflare veya yerel hedef dosya değişmez.
---apply doğrulanmış dosyayı ~/mualiy-yayinla-ccf322cc.py olarak kaydeder ve gizli
+--apply doğrulanmış dosyayı ~/mualiy-yayinla-c1501cb8.py olarak kaydeder ve gizli
 bilgileri yalnız VDS terminalinde soran yayın aracını sudo ile başlatır.
 USAGE
 }

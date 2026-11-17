@@ -31,8 +31,8 @@ TUNNEL_PROJECT = 'mualiy-sui-tunnel'
 PANEL_MARKER = 'mualiy-sui-loopback-bootstrap-v1'
 LIVE_MARKER = 'mualiy-sui-live-v1'
 PANEL_IMAGE = 'alireza7/s-ui:v1.6.7@sha256:c262ebd5cd53fd098d3080089af46220473bacbaf1a113e767aa9aadd2eed36d'
-PUBLISHER_NAME = 'mualiy-yayinla-ccf322cc.py'
-PUBLISHER_SHA256 = 'ccf322cc91ea882fee62eed1e4d77a1f9b4d23690bde5a045c6bb0fb1ebdcf68'
+PUBLISHER_NAME = 'mualiy-yayinla-c1501cb8.py'
+PUBLISHER_SHA256 = 'c1501cb8dade1e8583f256b1f02dc2c69e02beb6f4ea603550ba59d42679ab17'
 
 
 class Stop(Exception):
