@@ -1,12 +1,23 @@
 # Hızlı yayın: mevcut panel + Trojan/TLS
 
-**Yeni kurulum/parola sıfırlama yok.** Hazır Docker S-UI ve değiştirilmiş yönetici şifresi korunacak. Asistanın VDS'ye SSH erişimi yoktu. Kullanıcının önceki denemesi Access kontrolünde durdu; `MualiySetup/1.1` User-Agent düzeltmesi teslim edildi, VDS'deki yeniden deneme sonucu bilinmiyor. Aşağıdaki Cloudflare hazırlıklarından zaten yapılmış olanları yeniden oluşturma; yalnız eksik/doğrulanmamış olanları tamamla. Bu belge kodun ne yaptığını anlatır, tamamlanmış yayın raporu değildir.
+**Varsayılan yol yeni kurulum/parola sıfırlama değildir:** hazır Docker S-UI ve değiştirilmiş yönetici şifresi korunur. Ancak kullanıcı mevcut panelin bozuk olduğunu açıkça bildirip **sıfırdan kurulum** onayı verirse, aşağıdaki dar kapsamlı reset aracı eski Mualiy panel/tunnel state'ini silmeden root-özel arşive taşır ve yalnız sonra yeni panel kurar. Asistanın VDS'ye SSH erişimi yoktur. Aşağıdaki Cloudflare hazırlıklarından zaten yapılmış olanları yeniden oluşturma; yalnız eksik/doğrulanmamış olanları tamamla. Bu belge kodun ne yaptığını anlatır, tamamlanmış yayın raporu değildir.
 
 ## 0. Devir sonrası kaldığın yer
 
 Ana bağlam [kök README](../README.md), makine özeti `durum.json`. Kullanıcı **Ubuntu 26.04.1 yükseltmesi ve başarılı reboot** bildirdi; artık “reboot bilinmiyor” diye başa dönülmez. Çalışan kernel/paket/servis sağlığı bağımsız ölçülmedi. Yayından önce yalnız kısa salt-okunur sağlık, mevcut panel health ve gerçek 8443 socket + Docker mapping kontrolü yeterli başlangıçtır; yükseltici, eski bootstrap veya geniş temizlik yeniden çalıştırılmaz.
 
 İlk panel `restart: no` ile kurulmuştu. Reboot sonrası durmuşsa hedef projeyi/DB bağını doğrulayıp **yalnız mevcut paneli** başlat; yeniden kurma, DB/compose/private state silme. Eski native temizlik aracının VDS'de çalıştırılıp çalıştırılmadığı bilinmiyor; yayını gereksiz bir toplu temizlik turuna bağlama. Yayın betiği gerçek 8443 çakışmasını kendi sınırlı kurallarıyla denetler.
+
+### Açık onaylı sıfırdan kurulum istisnası
+
+Yalnız kullanıcı bozuk mevcut paneli bırakıp sıfırdan kurulum için açık onay verdiyse `mualiy-sifirla-ve-yayinla.py` kullanılabilir. Bu araç:
+
+- sadece `.mualiy-managed` / `.managed` işareti ve Docker Compose label/mount eşleşmeleri doğru olan `mualiy-sui` ile `mualiy-sui-tunnel` kaynaklarına dokunur; bilinmeyen yapıda durur;
+- eski DB, cert, compose ve varsa yayın state'ini **silmez**; `/opt` altında root-özel zaman damgalı reset arşivine taşır;
+- yalnız doğrulanmış eski panel/connector container'ını kaldırır; ThinLinc, Minecraft/Crafty, Jitsi, SSH, genel Docker ve firewall'a dokunmaz;
+- yeni paneli yalnız loopback `2095/2096` ile başlatır, admin hesabını yerel API üzerinden gizli girişle değiştirir ve ardından SHA-256 doğrulanmış normal yayın aracını çalıştırır.
+
+Önce `sudo python3 /home/neo/mualiy-sifirla-ve-yayinla.py --check` ile yalnız kapsam denetlenir. `--apply`, TTY'de `SIFIRLA` onayı, yeni panel admin adı/parolası ve sonrasında normal yayın aracının panel/Cloudflare/tunnel/sertifika sorularını ister. Token veya parola komut argümanına/repoya yazılmaz. Eski arşiv veya yarım kalan yeni dosyalar hata halinde silinmez.
 
 ## 1. Cloudflare — üç kısa hazırlık
 
@@ -56,9 +67,27 @@ Certbot'un DNS-01 eklentisi bu dar kapsamlı token ile doğrulama yapabilir; 80/
 
 `vpn.mualiy.net` mevcut **A → `38.210.77.17`, DNS only / gri bulut** kaydı olarak kalacak. Bu hostname'i Tunnel'a yönlendirme. Doğru bir VDS IPv6 yayını hazırlamadık; `vpn` için yanlış/eski bir AAAA kaydı ekleme.
 
-## 2. Tek dosya, tek çalıştırma
+## 2. Termux için tek-yapıştır başlatıcı
 
-`mualiy-yayinla.py` dosyasını VDS'de **`/home/neo/mualiy-yayinla.py`** konumuna aktar. Eski bootstrap/kurulum dosyasını tekrar çalıştırma.
+Telefonda dosya aktarmak yerine bu paketteki `termux-yayin-baslat.sh` başlatıcısı kullanılabilir. Başlatıcı, yayın aracını GitHub'daki sabit **`1a90c64f529d687f32476971764244eb1a654b2a`** commit'inden HTTPS ile indirir ve **`347f20b5a4e3115891837a85b6a502e80100ef0235d5b6c6966152535efc8639`** SHA-256 değeriyle doğrular. `curl | sh` kullanmaz; önceki elle aktarılmış `~/mualiy-yayinla.py` dosyasına hiç dokunmaz. Doğrulanmış yeni kopya ayrı, sürüm sabitli `~/mualiy-yayinla-347f20b5.py` yoluna yazılır; o yol zaten varsa da beklenmeyen veya sembolik linkli dosyanın üstüne yazmaz.
+
+Önce yalnız indirme/bütünlük yolunu denemek için VDS'de normal kullanıcıyla, doğrudan terminalde:
+
+```bash
+bash ~/mualiy-yayin-baslat.sh --dry-run
+```
+
+Bu mod paneli, Docker'ı, Cloudflare'ı veya hedef dosyayı değiştirmez. Başarılı sonuçtan sonra, aynı doğrudan terminalde:
+
+```bash
+bash ~/mualiy-yayin-baslat.sh --apply
+```
+
+`--apply` doğrulanmış yayın dosyasını `~/mualiy-yayinla-347f20b5.py` olarak kaydeder, yalnız yerel `sudo` şifresini ister ve sonra yayın aracını TTY'de başlatır. Bu başlatıcı **Access uygulaması, yeni Tunnel route'u veya DNS kaydını oluşturmaz**; Bölüm 1'deki yapılmamış Cloudflare ön koşulları önce tamamlanmalıdır. Başlatıcının kendisini VDS'ye aktaracak kopyala-yapıştır bloğu, paketle birlikte verilmelidir; token/parola/link o bloğa eklenmez.
+
+## 3. Tek dosya, tek çalıştırma — manuel alternatif
+
+Başlatıcı kullanılamıyorsa, `mualiy-yayinla.py` dosyasını VDS'de **`/home/neo/mualiy-yayinla.py`** konumuna aktar. Eski bootstrap/kurulum dosyasını tekrar çalıştırma.
 
 VDS terminalinde:
 
@@ -91,7 +120,7 @@ Betik sırasıyla yerelde şunları sorar:
 
 Host 80/443, Docker Engine, Minecraft/Crafty/Jitsi, ThinLinc, resmî zapret2, SSH ve genel firewall/DNS kurallarında kurulum/değişiklik/flush yapılmaz. Docker'ın **8443 için yeni yayını** doğal olarak kendi yönlendirme kurallarını ekler. VDS sağlayıcı firewall'ında kapalıysa yalnız **TCP 8443** izni gerekecektir. DNS-01 sertifika doğrulaması yalnız geçici `_acme-challenge.vpn.mualiy.net` TXT kayıtları ekleyip kaldırır; diğer A/CNAME kayıtları betik tarafından değiştirilmez.
 
-## 3. Kullan
+## 4. Kullan
 
 - Panel: **`https://panel.mualiy.net/app/`** — önce Access, ardından mevcut S-UI girişi.
 - Trojan: **`vpn.mualiy.net:8443`, TCP + TLS, SNI `vpn.mualiy.net`**. Sertifika doğrulaması açık.
