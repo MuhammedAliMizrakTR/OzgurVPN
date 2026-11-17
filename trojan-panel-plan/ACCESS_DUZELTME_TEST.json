@@ -1,0 +1,51 @@
+{
+  "source_screenshot": "Pakete alınmayan kullanıcı ekran görüntüsü: Screenshot_20261115_231741_Termux.jpg; dosya adındaki tarih doğrulanmış gözlem zamanı değildir.",
+  "reported_vds_stage": "check_access aborted before panel login, private state creation, ACME or Trojan modifications in this attempt",
+  "public_probe_results": [
+    {
+      "user_agent": "Python-urllib/3.12",
+      "status": 403,
+      "location_host": null
+    },
+    {
+      "user_agent": "curl/8.5.0",
+      "status": 302,
+      "location_host": "neomualiy.cloudflareaccess.com"
+    },
+    {
+      "user_agent": "Mozilla/5.0",
+      "status": 302,
+      "location_host": "neomualiy.cloudflareaccess.com"
+    },
+    {
+      "user_agent": "MualiySetup/1.1",
+      "status": 302,
+      "location_host": "neomualiy.cloudflareaccess.com"
+    }
+  ],
+  "diagnosis": "Reproduced UA-dependent false negative in the installer Access check. Public Access login redirect exists; this does not verify email policy, tunnel health or Trojan ingress.",
+  "change": "Explicit honest User-Agent MualiySetup/1.1 on the public Access probe only. HTTP redirect and allowed Access hostname checks unchanged.",
+  "old_script_sha256": "f6f65f90a3d8a53bdd0f68414bb112655435f954a14d0b56be7c182e76446f63",
+  "new_script_sha256": "347f20b5a4e3115891837a85b6a502e80100ef0235d5b6c6966152535efc8639",
+  "inline_patch": "Original full hash reconstructed and matched; single replacement syntax/idempotency verified",
+  "offline_safety_tests_passed": 16,
+  "live_patched_access_check_from_workspace": "passed",
+  "real_native_fixture": "rerun passed: login/backup/TLS/inbound/client/idempotency/password retention/Trojan TCP echo/subscription",
+  "dns_now": {
+    "panel_A": [
+      "104.21.17.29",
+      "172.67.219.201"
+    ],
+    "vpn_A": [
+      "38.210.77.17"
+    ],
+    "sub_status": "NXDOMAIN"
+  },
+  "assistant_vds_execution": false,
+  "user_patch_retry_result": "pending; do not claim the VDS rollout completed",
+  "_devir_notu": {
+    "kanit_turu": "önceki oturumun yerel/kamuya açık gözlem kaydı; devir sırasında güncel VDS sonucu değildir",
+    "yeni_kontroller": "kök DEVIR_TEST_SONUCLARI.json",
+    "uzak_vds_calistirmasi_yapildi": false
+  }
+}

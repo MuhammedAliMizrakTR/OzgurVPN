@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+clients/
+secrets/
+*.key
+*.pem
+*.crt
+*.p12
+.cache/
+.venv/
+__pycache__/
+*.pyc
+bin/
+*.zip
+.DS_Store

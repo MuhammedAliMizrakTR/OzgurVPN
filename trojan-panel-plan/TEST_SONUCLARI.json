@@ -1,0 +1,43 @@
+{
+  "script": "mualiy-sui-panel.sh",
+  "sha256": "5a8196b98fd6a8bac3bf3ac80cae37849cc0007de7ff45bb7a29b7b0c72507a2",
+  "shell_syntax": "passed",
+  "compose_checks": "PyYAML parsing and field invariants passed; not an actual Docker Compose runtime test",
+  "mock_installer_tests": {
+    "passed": 14,
+    "failed": 0,
+    "docker_and_curl": "mocked; no daemon or external requests"
+  },
+  "non_root_invocation_guard": "passed before final environment-only hardening",
+  "upstream_native_smoke": {
+    "version": "S-UI 1.6.7 / embedded sing-box 1.14.4",
+    "native_uid": 1000,
+    "http_panel": 200,
+    "healthcheck_exit": 0,
+    "subscription_listener": true,
+    "maintenance_fixture": true,
+    "docker_runtime_tested": false,
+    "remote_vds_changed": false,
+    "native_stopped": true
+  },
+  "docker_runtime_tested_in_sandbox": false,
+  "assistant_remote_execution": false,
+  "pending": [
+    "fresh actual container health/HTTP verification",
+    "old native cleanup result on VDS",
+    "DNS-01 TLS certificate",
+    "new panel Trojan inbound and verified port publication",
+    "separate Cloudflare panel/subscription tunnel",
+    "MikuBox/Windows full-device TUN acceptance"
+  ],
+  "user_reported_progress": {
+    "panel_accessible": true,
+    "admin_password_changed": true,
+    "independently_inspected": false
+  },
+  "_devir_notu": {
+    "kanit_turu": "önceki oturumun yerel/kamuya açık gözlem kaydı; devir sırasında güncel VDS sonucu değildir",
+    "yeni_kontroller": "kök DEVIR_TEST_SONUCLARI.json",
+    "uzak_vds_calistirmasi_yapildi": false
+  }
+}

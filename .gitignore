@@ -1,0 +1,60 @@
+# Local environment and credentials. The intentionally empty template is public.
+.env
+.env.*
+!.env.example
+
+# Dependency caches, binaries and editor artifacts.
+.cache/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+node_modules/
+bin/
+*.exe
+*.o
+*.a
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Raw evidence, duplicate packages and generated diagnostics.
+/uploads/
+/vds-local-tests/
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.log
+vds-on-kontrol.*.txt
+*.local.json
+
+# Never publish live VDS data, generated credentials or client subscriptions.
+clients/
+secrets/
+credentials/
+mualiy-sui-live/
+mualiy-eski-servisler-*/
+mualiy-baglanti-*/
+ozgur-vds-clients/
+state.json
+baglanti.txt
+cloudflare.ini
+tunnel-token
+*credentials*.json
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+
+# This is a source archive. .gitignore is not a secret scanner and does not
+# protect files that were already tracked or manually uploaded via the web UI.

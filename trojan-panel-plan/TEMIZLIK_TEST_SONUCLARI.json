@@ -1,0 +1,40 @@
+{
+  "script": "mualiy-eski-servis-temizle.py",
+  "sha256": "cc6e788ab286ecd83997872eccbd5837eccf5428274a6e5326162efab99d6bb8",
+  "python_compilation": "passed",
+  "non_root_guard": "passed; --check invocation without sudo refused before commands",
+  "offline_fixture_tests": {
+    "passed": 20,
+    "failed": 0,
+    "systemctl_and_docker": "mocked; no real daemons, old services or VDS files modified"
+  },
+  "covered": [
+    "check makes no service/data changes",
+    "old files archived under private root-backup fixture",
+    "new panel DB byte-for-byte retained in fixtures",
+    "missing/unhealthy/wrong-DB panel refusal",
+    "container mount overlap refusal",
+    "ozgur-zapret shared-dependency refusal before stop",
+    "vendor and unknown fragment/ExecStart refusal",
+    "new-panel reference in drop-ins refusal",
+    "other Docker command in unit refusal",
+    "s.ui spelling variant",
+    "enabled old unit disable",
+    "other process references",
+    "stop/move failure behavior",
+    "other 8443 listener not killed",
+    "local Docker environment override"
+  ],
+  "vds_execution_by_assistant": false,
+  "actual_vds_cleanup_status": "pending user execution and output",
+  "limitations": [
+    "No real systemd/Docker integration test in this workspace",
+    "Does not permanently erase backup or exhaustively delete every sing-box/package/account/export file",
+    "Leaves general firewall/routing/DNS untouched; refuses known shared custom-zapret dependency"
+  ],
+  "_devir_notu": {
+    "kanit_turu": "önceki oturumun yerel/kamuya açık gözlem kaydı; devir sırasında güncel VDS sonucu değildir",
+    "yeni_kontroller": "kök DEVIR_TEST_SONUCLARI.json",
+    "uzak_vds_calistirmasi_yapildi": false
+  }
+}

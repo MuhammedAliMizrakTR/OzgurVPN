@@ -1,0 +1,167 @@
+{
+  "schema": "mualiy-handoff-v1",
+  "devir_tarihi": "2026-11-14",
+  "saat_dilimi": "Europe/Istanbul",
+  "zaman_notu": "Geçmiş yükleme adlarındaki 20261115 ve eski dosya zamanları tek başına doğrulanmış gözlem tarihi değildir. Öncelik, konuşmadaki son kullanıcı bildirimindedir; eski ağ gözlemleri güncel kabul edilmez.",
+  "ana_belge": "../README.md",
+  "guncel_oncelik": "Mevcut Docker S-UI panelini ve değiştirilmiş yönetici parolasını/DB'yi koruyarak paneli Access arkasından yayımla; vpn.mualiy.net üzerinden doğrudan Trojan/TLS ve gerçek Android/Windows cihaz geneli TUN kabulünü tamamla. Bootstrap veya işletim sistemi yükseltmesini yeniden çalıştırma.",
+  "kanit_sinirlari": {
+    "asistan_ssh_vds_erisim_ve_calistirma": false,
+    "asistan_cloudflare_hesap_degiskligi": false,
+    "github_uzak_push": false,
+    "github_connector_sorgusu": "unsupported; kullanıcı dosyaları kendisi yükleyecek",
+    "kaynak_paketi_canli_veri_yedegi_degil": true,
+    "eski_raporlar": "Önceki oturumun yerel testleri veya kullanıcı çıktıları; kök DEVIR_TEST_SONUCLARI.json yalnız devir sırasında yeniden yapılan yerel kontrolleri kaydeder.",
+    "uretime_hazir_topluluk_vpni": false
+  },
+  "kesinlesen_secimler": {
+    "sunucu_rolu": "kendi yeni Trojan sunucusu; upstream Trojan istemcisi değil",
+    "alan_adi": "mualiy.net",
+    "dns_kontrolu": "kullanıcı doğruladı",
+    "panel": "S-UI v1.6.7 / sing-box 1.14.4; Docker Compose mualiy-sui",
+    "android": "mevcut MikuBox 1.4.3-UwU-2; NekoBox soy hattı; SFA veya yeni Mihomo dalına sessiz geçiş yok",
+    "windows": "Windows 10/11; CPU mimarisi henüz bilinmiyor",
+    "istenen_kapsam": "cihaz geneli VPN/TUN, tüm uygulamalar ve değişmiş genel çıkış IP'si; HTTP/SOCKS uygulama proxy'si yeterli değil",
+    "panel_host": "panel.mualiy.net; ayrı YENİ Cloudflare Tunnel + yalnız sahibin e-postasına Access",
+    "abonelik_host": "sub.mualiy.net; aynı yeni Tunnel, tarayıcı etkileşimli Access olmadan gizli abonelik yolu",
+    "vpn_host": "vpn.mualiy.net; DNS-only A 38.210.77.17; TCP/TLS 8443 ancak canlı socket VE Docker eşlemesi denetlenerek",
+    "sertifika": "DNS-01; dolu olabilen host 80/443 kullanılmaz; TLS doğrulaması kapatılmaz",
+    "once_kendi_vds": true
+  },
+  "son_kullanici_bildirimi": {
+    "yeni_docker_panel_acildi": true,
+    "yonetici_parolasi_degisti": true,
+    "panel_db_korunacak": "/opt/mualiy-sui/db",
+    "ubuntu_yukseltme_tamamlandi": true,
+    "basarili_reboot_bildirildi": true,
+    "lsb_release_terminali": {
+      "description": "Ubuntu 26.04.1 LTS",
+      "release": "26.04",
+      "codename": "resolute"
+    },
+    "kullanici": "neo; UID 1000; sudo grubu kullanıcı terminalinde görüldü",
+    "kaynak": "kullanıcı beyanı ve paylaşılan terminal çıktısı; asistanın bağımsız VDS incelemesi değil",
+    "kernel_paket_ve_servis_sagligi_bagimsiz_dogrulandi": false,
+    "security_violation_ssh_aciklamasi": "Kullanıcı, sağlayıcının değiştirdiği SSH paketleri/imzalarıyla açıkladı. Bu neden asistan tarafından bağımsız doğrulanmadı.",
+    "snap_notu": "Önceki core24/core26 indirmelerinde api.snapcraft.io TCP/443 refused/timeout görüldü; bu tek başına DEB bozulması veya belirli sağlayıcı/firewall nedeni değildir."
+  },
+  "en_kucuk_sonraki_kontrol": {
+    "kural": "Başarılı reboot artık kullanıcı tarafından bildirildi. Yeni bir yükseltme turu veya geniş temizlik kapısı ekleme. Yayına dönmeden kısa salt-okunur sağlık ve gerçek panel/port durumunu al; sağlıklıysa doğrudan mevcut panelden devam et.",
+    "komutlar": [
+      "uname -r",
+      "uptime -s",
+      "systemd-detect-virt",
+      "sudo dpkg --audit",
+      "sudo /usr/sbin/sshd -t",
+      "systemctl --failed --no-pager",
+      "sudo docker -H unix:///var/run/docker.sock ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'",
+      "sudo ss -H -lntp '( sport = :8443 or sport = :2095 or sport = :2096 )'"
+    ],
+    "uyari": "ss çıktısı tek başına Docker NAT/port sahipliğini veya dış erişimi kanıtlamaz. sshd -t yalnız yapılandırma sözdizimini sınar, paket imzasını değil. İlk bootstrap restart:no kullandığı için reboot sonrası durmuş panel veri kaybını kanıtlamaz."
+  },
+  "mevcut_panel_koruma": {
+    "compose_proje": "mualiy-sui",
+    "servis": "panel",
+    "kok": "/opt/mualiy-sui",
+    "korunacaklar": ["compose.yaml", "db", "cert", ".mualiy-managed"],
+    "bootstrap_isareti": "mualiy-sui-loopback-bootstrap-v1",
+    "ilk_yonetim_portlari": ["127.0.0.1:2095", "127.0.0.1:2096"],
+    "ilk_restart_politikasi": "no",
+    "imaj": "alireza7/s-ui:v1.6.7@sha256:c262ebd5cd53fd098d3080089af46220473bacbaf1a113e767aa9aadd2eed36d",
+    "kullanici": "10001:10001",
+    "ilk_kurucu": "mualiy-sui-panel.sh; yalnız tarihçe, mevcut VDS'de yeniden çalıştırma"
+  },
+  "yayin_araci": {
+    "betik": "mualiy-yayinla.py",
+    "sha256": "347f20b5a4e3115891837a85b6a502e80100ef0235d5b6c6966152535efc8639",
+    "rehber": "HIZLI_YAYIN.md",
+    "son_uzak_durum": "Kullanıcı ekran görüntüsündeki deneme check_access aşamasında durdu; o denemede API/ACME/Trojan'a geçilmedi. User-Agent düzeltmesi teslim edildi; VDS'deki yeniden deneme sonucu bilinmiyor.",
+    "access_duzeltmesi": {
+      "kimlik": "MualiySetup/1.1",
+      "eski_urllib_sonucu": 403,
+      "setup_ua_ile_onceki_kamu_gozlemi": "302 -> neomualiy.cloudflareaccess.com Access girişi",
+      "guard_kaldirildi": false,
+      "kanit_siniri": "Yönlendirme owner-only politika, origin/Tunnel sağlığı veya Trojan erişimi kanıtı değil"
+    },
+    "yaptiklari": [
+      "yalnız mevcut healthy paneli ve DB/cert bağlarını doğrulama; yönetici parolasını sıfırlamama",
+      "root'a özel tutarlı API DB ve Compose yedeği",
+      "dar kapsamlı Cloudflare DNS token ile DNS-01 CA sertifikası",
+      "S-UI API üzerinden TLS profili, Trojan inbound, rastgele özel client ve subURI",
+      "yalnız yeni panelde TCP 8443 yayını; 2095/2096 loopback kalır",
+      "yalnız doğrulanmış eski ozgur-trojan port sahibini gerekirse durdurma/disable; bilinmeyen sürece dokunmama",
+      "ayrı mualiy-sui-tunnel projesi; ThinLinc servisine/configine dokunmama",
+      "yalnız yeni panelin gerektiğinde yeniden başlatıldığı sertifika yenileme timer'ı",
+      "gizli linkleri VDS'de özel dosyaya yazma; sohbete basmama"
+    ],
+    "ozel_canli_dizin": "/opt/mualiy-sui-live; varlığı/kısmi içeriği uzak inceleme olmadan bilinmiyor; Git'e alma veya silme",
+    "ozel_canli_isaret": "mualiy-sui-live-v1",
+    "otomatik_tam_geri_alma": false,
+    "kismen_ilerlerse": "CA/servis/API değişiklikleri kısmen kalabilir. Özel state ve yedekleri silme. Beklenmeyen kayıt değişikliğinde zorlayarak tekrar çalıştırma.",
+    "onceki_guvenlik_testleri": 16,
+    "onceki_native_fixture": "Gerçek S-UI API, SQLite yedeği, TLS + doğrulanmış Trojan TCP echo, idempotence, parola korunması, abonelikte Trojan URI; yerel fixture durduruldu.",
+    "surum_kilitleri": {
+      "certbot": "certbot/dns-cloudflare:v5.10.0@sha256:6d5e1e84f687ce81786c97cbeccb9dda94d86bbb29a81dbb85527bd68008d77d",
+      "cloudflared": "cloudflare/cloudflared:2026.11.0@sha256:b94b96edf2c9c4360f8879c8580cfaa99077f19c849ec595ca2f711b27d4f344"
+    }
+  },
+  "eski_native_temizlik": {
+    "kullanici_yetkisi": "Eski s.ui/s-ui, sing-box, ozgur-trojan servis ve bilinen kalıntıları devreden çıkar; yeni Docker paneline/DB'ye dokunma",
+    "betik": "mualiy-eski-servis-temizle.py",
+    "rehber": "ESKI_SERVIS_TEMIZLIGI.md",
+    "sha256": "cc6e788ab286ecd83997872eccbd5837eccf5428274a6e5326162efab99d6bb8",
+    "birimler": ["ozgur-trojan.service", "s-ui.service", "s.ui.service", "sing-box.service"],
+    "yerel_mock_testleri": 20,
+    "vds_uygulama_sonucu": "bilinmiyor; asistan uygulamadı",
+    "silme_yerine_ozel_arsiv": "/root/mualiy-eski-servisler-.../; sır içerebilir, Git'e alma",
+    "yayin_oncesi_zorunlu_genis_temizlik_kapisi_degil": true,
+    "bilerek_birakilanlar": "ortak paket/binary/config ve hesaplar, kullanıcı evindeki eski export/ZIP'ler; başka bileşenlere ait olabilir"
+  },
+  "korunacak_hizmetler": [
+    "Minecraft/Crafty ve DNS kayıtları; minecraft-crafty-crafty-1 / minecraft-crafty-cloudflared-1",
+    "Jitsi ve ilgili Docker projeleri",
+    "ThinLinc ve thinlinc-tunel cloudflared tüneli/configi/DNS'i",
+    "SSH, mevcut rotalar, host 80/443 sahipleri ve diğer Docker projeleri",
+    "resmî bol-van/zapret2 v1.0.7: /opt/zapret2, zapret2.service ve mevcut liste timer'ı"
+  ],
+  "tarihsel_gozlem_guncel_degildir": {
+    "docker": "29.9.3; Compose v5.7.1, kullanıcı terminali",
+    "eski_native_8443": "ozgur-trojan / sing-box 0.0.0.0:8443 görülmüştü; eski PID 2014 GÜNCEL KILL HEDEFİ DEĞİL",
+    "crafty_8443": "eski listede container-exposed idi, host-published eşleme değildi; yeniden kontrol şart",
+    "panel_A": ["104.21.17.29", "172.67.219.201"],
+    "vpn_A": ["38.210.77.17"],
+    "vpn_AAAA": "daha önce boştu; yeniden doğrulanmadı",
+    "sub_dns": "son gözlem NXDOMAIN; güncel durum bilinmiyor"
+  },
+  "zapret_wattpad": {
+    "resmi_kurulum": "Kullanıcı logu /opt/zapret2 v1.0.7 kurulumunu ve etkinleştirme adımlarını gösterdi; güncel runtime bilinmiyor",
+    "aday": "--payload=tls_client_hello --lua-desync=multisplit:pos=2",
+    "kanit": "kullanıcı blockcheck özetinde TLS1.2 ve TLS1.3 AVAILABLE; HTTP200/giriş/okuma veya tüm uygulamalarda başarı değildir",
+    "docker_cikis_yolunda_dogrulandi": false,
+    "yeniden_tam_tarama": "gerekli olduğu kanıtlanmadı; ilk adım yapma",
+    "sinir": "ülke/çıkış IP'sini değiştirmez, hedefin sert IP/geoblock reddini çözmez; hostlist tek başına UID veya container sınırı değildir",
+    "eski_bilesenlerden_farki": "resmî /opt/zapret2, eski özel ozgur-zapret ve Keift /opt/zapret ayrı yapılardır"
+  },
+  "kalanlar": [
+    "kısa reboot sonrası sağlık, gerçek panel health, 8443 socket + Docker port eşlemesi kontrolü",
+    "Access owner-only politika ve ayrı yeni Tunnel/panel route durumunu doğrula; ThinLinc'i koru",
+    "düzeltilmiş yayın betiğinin VDS sonucu; gerçek DNS-01, Trojan, TCP8443 dış erişimi ve sınırlı firewall izni",
+    "sub.mualiy.net DNS/route ve gerçek MikuBox abonelik uyumluluğu; normal manuel Trojan bağlantısı bundan bağımsız denenebilir",
+    "Android MikuBox cihaz geneli TUN ve telefonun kendi tarayıcısında 38.210.77.17 çıkış IP'si",
+    "Windows10/11 TUN, DNS/IPv6/UDP/ses/oyun, ağ değişimi/uyku/yeniden bağlanma kabulü",
+    "gerçek sertifika yenileme ve yalnız yeni panelde yeniden yükleme/rollback tatbikatı",
+    "gerekirse kontrollü Docker-zapret2 Wattpad çıkış karşılaştırması; sonra eski native kalıntı kontrolü",
+    "bağımsız ikinci >=100GB hak, ücretsiz/kartsız/Docker/VPN izinli yabancı yedek; Hax gerçek tahsis ve IPv6/port uygunluğu",
+    "yalnız açıkça izinli Telegram/API yenilemesi; anti-bot veya kullanım kısıtı aşma yok",
+    "uzun vadede uygun yönetim yazılımı/güvenlik incelemesi, kalıcı kullanıcı kotası ve sağlayıcı izinleri olmadan topluluk yayını yok"
+  ],
+  "ek_scope": {
+    "ucretsiz_host_sartlari": "tamamen ücretsiz, kartsız, Docker, en az100GB/ay, açık VPN izni; henüz tümünü karşılayan başarılı tahsis yok",
+    "yedek_kota": "aynı kotayı paylaşan iki container değil, ikinci bağımsız en az100GB hak",
+    "hax": "araştırılan hax.co.id ile kullanıcının yazdığı hax.id eşdeğerliği doğrulanmadı; tahsis/yetki/izinli yenileme yok",
+    "barindirma_arastirmasi": "tarihli ve tüm seçenekleri tüketen kapsamlı bir tarama değil; Hugging Face uygunluğu ücret/eligibility engeline takıldı; SnapDeploy VPN/proxy/tunnel yasağı nedeniyle uygun sayılmadı",
+    "back4app": "50.dakikada VDS/GitHub tetiklemeli redeploy düşüncesi koşullu tartışıldı, uygulanmadı veya kesintisizlik/izin kanıtı olmadı",
+    "tor": "yalnız araştırma ortamında Tor çıkışı doğrulandı; canlı onion aramaları zaman aşımı, kapsamlı tarama veya uygun ek ücretsiz tahsis kanıtı yok",
+    "eski_prototip": "free-vpn-engineering Trojan/WSS uygulama proxy'si; TUN veya mevcut S-UI dağıtımı değildir"
+  }
+}

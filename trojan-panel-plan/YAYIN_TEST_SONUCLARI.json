@@ -1,0 +1,46 @@
+{
+  "script": "mualiy-yayinla.py",
+  "sha256": "347f20b5a4e3115891837a85b6a502e80100ef0235d5b6c6966152535efc8639",
+  "python_compilation": "passed",
+  "guide_bash_syntax": "passed, commands not executed",
+  "non_root_guard": "passed",
+  "timer_calendar_syntax": "validated by systemd-analyze calendar",
+  "offline_safety_tests": {
+    "passed": 16,
+    "failed": 0,
+    "docker_systemd": "mocked"
+  },
+  "real_native_fixture": {
+    "native_version": "S-UI 1.6.7 / embedded sing-box 1.14.4",
+    "docker_tested": false,
+    "real_acme_tested": false,
+    "vds_changed": false,
+    "fixture_stopped": true,
+    "login_with_cookie_and_same_origin": true,
+    "consistent_sqlite_backup": true,
+    "api_tls_inbound_and_client_created": true,
+    "api_setup_idempotent": true,
+    "public_subscription_base_configured": true,
+    "tls_hostname_and_fixture_ca_verified": true,
+    "authenticated_trojan_tcp_echo": true,
+    "admin_password_unchanged": true,
+    "subscription_http_ok": true,
+    "subscription_base64_trojan_uri_verified": true,
+    "subscription_response_bytes": 272
+  },
+  "docker_runtime_tested": false,
+  "real_acme_tested": false,
+  "assistant_vds_execution": false,
+  "cloudflare_account_changes_by_assistant": false,
+  "access_probe_fix": {
+    "live_check_from_workspace": "passed",
+    "guard_not_removed": true,
+    "original_false_negative_reproduced": true,
+    "user_vds_retry": "pending"
+  },
+  "_devir_notu": {
+    "kanit_turu": "önceki oturumun yerel/kamuya açık gözlem kaydı; devir sırasında güncel VDS sonucu değildir",
+    "yeni_kontroller": "kök DEVIR_TEST_SONUCLARI.json",
+    "uzak_vds_calistirmasi_yapildi": false
+  }
+}

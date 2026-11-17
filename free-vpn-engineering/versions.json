@@ -1,0 +1,14 @@
+{
+  "sing_box": "1.14.4",
+  "source": "https://github.com/SagerNet/sing-box/releases/tag/v1.14.4",
+  "archives": {
+    "amd64": {
+      "sha256": "699a1b510aa4396b2176d32d1181920399ebf1e267835da6f3b598d0f7c24968"
+    },
+    "arm64": {
+      "sha256": "436441f76ee2f7fe21b5b2d426d3cb261a480455a704865789ad533e4273ec26"
+    }
+  },
+  "go": "1.27.4",
+  "checked_on": "2026-11-14"
+}

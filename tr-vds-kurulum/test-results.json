@@ -1,0 +1,86 @@
+{
+  "checked_on": "2026-11-14",
+  "environment": {
+    "scope": "Arena sandbox, not user VDS",
+    "system": "Linux",
+    "kernel": "6.1.189+",
+    "architecture": "x86_64",
+    "python": "3.13.18"
+  },
+  "offline": {
+    "passed": 17,
+    "failed": 0
+  },
+  "isolated_protocol_nfqueue": {
+    "passed": [
+      "sing-box server + Android TUN schema accepted by 1.14.4",
+      "Trojan TLS custom trust + correct IP SAN verified",
+      "wrong TLS identity rejected",
+      "untrusted TLS certificate rejected",
+      "HTTPS/TCP payload relayed over authenticated Trojan",
+      "SOCKS UDP -> Trojan/TLS -> remote UDP echo returned exact payload",
+      "wrong Trojan password cannot reach target",
+      "loopback target rejected by server policy",
+      "scoped nftables rules validated by real isolated kernel",
+      "real NFQUEUE + split Lua loaded; scoped HTTPS relay succeeded",
+      "split: queue bypass kept Trojan working after nfqws2 stopped",
+      "real NFQUEUE + disorder Lua loaded; scoped HTTPS relay succeeded",
+      "disorder: queue bypass kept Trojan working after nfqws2 stopped",
+      "rollback preserved unrelated nft table",
+      "rollback refused same-name table without package ownership marker"
+    ],
+    "count": 15,
+    "limits": [
+      "isolated Debian sandbox, not Ubuntu VDS",
+      "local synthetic HTTPS target, not actual Wattpad",
+      "no actual Android TUN, DNS/IPv6 leak or kill-switch test",
+      "no censorship bypass assertion"
+    ]
+  },
+  "live_local_relay": {
+    "environment": "machine running this script, NOT automatically the user VDS",
+    "zapret": false,
+    "results": [
+      {
+        "target": "discord",
+        "curl_exit": 0,
+        "result": "HTTP=200 TLS=0",
+        "error": ""
+      },
+      {
+        "target": "roblox",
+        "curl_exit": 0,
+        "result": "HTTP=200 TLS=0",
+        "error": ""
+      },
+      {
+        "target": "wattpad",
+        "curl_exit": 0,
+        "result": "HTTP=200 TLS=0",
+        "error": ""
+      }
+    ]
+  },
+  "official_locked_downloads": {
+    "sing_box": "verified and executed",
+    "zapret2_archive_and_nfqws2": "verified and executed",
+    "umask_0077_permissions": "binary/dirs 0755, Lua/license 0644"
+  },
+  "systemd_verify": {
+    "status": "passed",
+    "limitation": "binary paths substituted to existing sandbox paths; no target services installed or started"
+  },
+  "not_performed": [
+    "target Ubuntu VDS installation and systemd runtime",
+    "external inbound port 8443",
+    "real Android TUN, exit IP, DNS/IPv6 leaks, OS lockdown",
+    "Discord voice / Roblox gaming / Wattpad reading and login on target path",
+    "actual target censorship strategy validation",
+    "Docker or backup deployment / independent quota / Hax renewal"
+  ],
+  "_devir_notu": {
+    "kanit_turu": "önceki oturumun yerel/kamuya açık gözlem kaydı; devir sırasında güncel VDS sonucu değildir",
+    "yeni_kontroller": "kök DEVIR_TEST_SONUCLARI.json",
+    "uzak_vds_calistirmasi_yapildi": false
+  }
+}
