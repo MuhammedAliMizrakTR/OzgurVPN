@@ -84,6 +84,34 @@ class SafetyTests(unittest.TestCase):
         real=self.root/'real';real.write_bytes(b'keep');link=self.root/'alias';link.symlink_to(real)
         with self.assertRaises(m.Stop):m.private_write(link,b'overwrite')
         self.assertEqual(real.read_bytes(),b'keep')
+    def test_equal_cert_contents_with_wrong_metadata_are_rewritten(self):
+        destination = self.root / 'cert' / 'mualiy-privkey.pem'
+        destination.write_bytes(b'fixture-key')
+        destination.chmod(0o600)
+        self.assertTrue(m.cert_file_needs_rewrite(destination, b'fixture-key'))
+
+    def test_cert_directory_repairs_only_verified_mount_source_metadata(self):
+        cert_dir = self.root / 'cert'
+        cert_dir.chmod(0o700)
+        with patch.object(m.os, 'chown') as chown:
+            m.normalize_cert_directory()
+        chown.assert_called_once_with(cert_dir, 0, m.PANEL_GID)
+        self.assertEqual(cert_dir.stat().st_mode & 0o777, 0o750)
+
+    def test_panel_cert_readability_is_checked_as_panel_user(self):
+        with patch.object(m, 'command', return_value=subprocess.CompletedProcess([], 0, '', '')) as command:
+            m.ensure_panel_can_read_cert(CID)
+        self.assertEqual(command.call_args.args[0], [
+            'docker', 'exec', '--user', '10001:10001', CID, 'sh', '-c',
+            'test -r /app/cert/mualiy-fullchain.pem && test -r /app/cert/mualiy-privkey.pem',
+        ])
+        self.assertFalse(command.call_args.kwargs['check'])
+
+    def test_unreadable_panel_cert_stops_before_inbound_api_save(self):
+        with patch.object(m, 'command', return_value=subprocess.CompletedProcess([], 1, '', '')):
+            with self.assertRaises(m.Stop):
+                m.ensure_panel_can_read_cert(CID)
+
     def test_acme_uses_credential_file_not_secret_argument(self):
         calls=[]
         with patch.object(m,'command',side_effect=lambda a,**kw:calls.append(a)):
