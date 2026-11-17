@@ -91,9 +91,19 @@ class FreshResetTests(unittest.TestCase):
             with self.assertRaises(m.Stop):
                 m.ask_admin()
         with patch('builtins.input', return_value='panel-owner'), \
-             patch.object(m.getpass, 'getpass', side_effect=['A' * 20, 'B' * 20]):
+             patch.object(m.getpass, 'getpass', side_effect=['A' * 12, 'B' * 12]):
             with self.assertRaises(m.Stop):
                 m.ask_admin()
+
+    def test_admin_prompt_accepts_twelve_character_password(self):
+        with patch('builtins.input', return_value='panel-owner'), \
+             patch.object(m.getpass, 'getpass', side_effect=['A1b2C3d4E5f6', 'A1b2C3d4E5f6']):
+            self.assertEqual(m.ask_admin(), ('panel-owner', 'A1b2C3d4E5f6'))
+
+    def test_local_api_constructs_cookie_opener(self):
+        api = m.LocalAPI()
+        self.assertEqual(api.base, 'http://127.0.0.1:2095/app/api/')
+        self.assertIsNotNone(api.http)
 
     def test_no_secret_command_line_or_destructive_wildcard(self):
         source = SCRIPT.read_text()

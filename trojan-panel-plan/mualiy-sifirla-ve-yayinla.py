@@ -245,8 +245,8 @@ def ask_admin():
     again = getpass.getpass('YENI S-UI sifresi tekrar (gorunmez): ')
     if password != again:
         raise Stop('Yeni sifreler ayni degil.')
-    if len(password) < 16 or any(char.isspace() for char in password) or password == 'admin':
-        raise Stop('Yeni sifre en az 16 karakter olmali, bosluk icermemeli ve admin olmamali.')
+    if len(password) < 12 or any(char.isspace() for char in password) or password == 'admin':
+        raise Stop('Yeni sifre en az 12 karakter olmali, bosluk icermemeli ve admin olmamali.')
     return user, password
 
 
@@ -254,7 +254,7 @@ class LocalAPI:
     """Loopback-only S-UI login/change-password helper; passwords never enter argv."""
     def __init__(self):
         self.http = urllib.request.build_opener(
-            urllib.request.ProxyHandler({}), http.cookiejar.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+            urllib.request.ProxyHandler({}), urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
         self.base = 'http://127.0.0.1:2095/app/api/'
 
     def post(self, action, data):
@@ -375,7 +375,7 @@ def main():
                 print('Dogrulanmis yayin dosyasi: ' + str(publisher))
             else:
                 apply()
-    except (Stop, OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
+    except Exception as error:
         message = str(error) if isinstance(error, Stop) else type(error).__name__ + '. Ham hata veya sir ekrana basilmayacak.'
         print('DUR: ' + message, file=sys.stderr)
         print('Arsivlenen veya yeni olusan dosyalari silme; token/parola/link/log gonderme.', file=sys.stderr)

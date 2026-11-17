@@ -17,7 +17,7 @@ Yalnız kullanıcı bozuk mevcut paneli bırakıp sıfırdan kurulum için açı
 - yalnız doğrulanmış eski panel/connector container'ını kaldırır; ThinLinc, Minecraft/Crafty, Jitsi, SSH, genel Docker ve firewall'a dokunmaz;
 - yeni paneli yalnız loopback `2095/2096` ile başlatır, admin hesabını yerel API üzerinden gizli girişle değiştirir ve ardından SHA-256 doğrulanmış normal yayın aracını çalıştırır.
 
-Önce `sudo python3 /home/neo/mualiy-sifirla-ve-yayinla.py --check` ile yalnız kapsam denetlenir. `--apply`, TTY'de `SIFIRLA` onayı, yeni panel admin adı/parolası ve sonrasında normal yayın aracının panel/Cloudflare/tunnel/sertifika sorularını ister. Token veya parola komut argümanına/repoya yazılmaz. Eski arşiv veya yarım kalan yeni dosyalar hata halinde silinmez.
+Önce `sudo python3 /home/neo/mualiy-sifirla-ve-yayinla.py --check` ile yalnız kapsam denetlenir. `--apply`, TTY'de `SIFIRLA` onayı, yeni panel admin adı ve en az 12 karakterlik (boşluksuz, benzersiz) parolası ile sonrasında normal yayın aracının panel/Cloudflare/tunnel/sertifika sorularını ister. Token veya parola komut argümanına/repoya yazılmaz. Eski arşiv veya yarım kalan yeni dosyalar hata halinde silinmez.
 
 ## 1. Cloudflare — üç kısa hazırlık
 
