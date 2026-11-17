@@ -1,0 +1,24 @@
+# ARCHIVE TEMPLATE: nested below free-vpn-engineering/, not a repository-root workflow.
+# Do not move/enable blindly; paths assume this subtree is the repository root.
+name: Optional readiness monitor
+on:
+  workflow_dispatch:
+  schedule:
+    # Every six hours, NOT an anti-sleep loop. Disabled unless explicitly enabled.
+    - cron: '17 */6 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: readiness-monitor
+  cancel-in-progress: false
+jobs:
+  readiness:
+    if: github.event_name == 'workflow_dispatch' || vars.ENABLE_HEALTH_MONITOR == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check readiness once (can wake a sleeping Free instance)
+        env:
+          SERVICE_URL: ${{ vars.SERVICE_URL }}
+        run: python3 scripts/healthcheck.py

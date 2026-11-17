@@ -1,0 +1,60 @@
+{
+  "input": "Pakete alınmayan kullanıcı logu: zapret2-wattpad.log",
+  "lines": 11157,
+  "summary_records": 2597,
+  "by_tls": {
+    "tls12": 1298,
+    "tls13": 1299
+  },
+  "chosen_candidate": "--payload=tls_client_hello --lua-desync=multisplit:pos=2",
+  "candidate_summary": [
+    {
+      "line": 8558,
+      "tls": "tls12",
+      "strategy": "nfqws2 --payload=tls_client_hello --lua-desync=multisplit:pos=2"
+    },
+    {
+      "line": 9856,
+      "tls": "tls13",
+      "strategy": "nfqws2 --payload=tls_client_hello --lua-desync=multisplit:pos=2"
+    }
+  ],
+  "limits": [
+    "blockcheck success is not necessarily HTTP200",
+    "repeat count not explicit in transcript beyond prompt",
+    "not actual Android/PC or login/reading tests"
+  ],
+  "remote_install_state": "User subsequently ran official install_easy.sh. Uploaded output.txt reaches the final prompt after installing to /opt/zapret2, enabling zapret2.service and the list-update timer, and requesting service start. Current runtime/HTTP/Trojan health is not established.",
+  "latest_install_log": {
+    "input": "Pakete alınmayan kullanıcı çıktısı: output.txt",
+    "official_version": "v1.0.7",
+    "installation_target": "/opt/zapret2",
+    "firewall": "nftables",
+    "ipv6_processing": false,
+    "flow_offload_choice": "hardware",
+    "filtering": "hostlist",
+    "nfqws2_enabled_by_installer_answer": true,
+    "strategy": "--payload=tls_client_hello --lua-desync=multisplit:pos=2",
+    "automatic_list_choice": "get_refilter_domains.sh",
+    "download_reported": "1311k",
+    "user_hostlist_loaded_before_download": 1,
+    "wattpad_present_in_user_hostlist": "not demonstrated by this log; upstream creates a placeholder on a fresh install",
+    "service_and_update_timer_enabled": true,
+    "runtime_acceptance": "pending",
+    "assistant_remote_execution": false
+  },
+  "local_validation": {
+    "shell_syntax": "passed",
+    "configuration_fields": "passed",
+    "nfqws2_command_dry_run": "passed; no NFQUEUE/firewall changes",
+    "actual_user_log_candidate": "AVAILABLE for both TLS1.2 and TLS1.3",
+    "initial_config_enabled": false
+  },
+  "config_sha256": "73630be4566251163de982b4379efba224d5a567f7a2af83ea3c9a3ccb671b0d",
+  "_devir_notu": {
+    "kanit_turu": "önceki kullanıcı loglarının analizi; güncel VDS veya Docker-zapret kabulü değil",
+    "ham_veri_pakette": false,
+    "ilk_kurulumu_tekrarlama": true,
+    "yeniden_tarama_gerekli_degil": true
+  }
+}

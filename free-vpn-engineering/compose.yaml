@@ -1,0 +1,21 @@
+services:
+  gateway:
+    build: .
+    image: ozgurag-gateway:local
+    init: true
+    env_file: .env
+    # Never publish the cleartext origin to the public internet.
+    ports:
+      - "127.0.0.1:10000:10000"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    mem_limit: 512m
+    cpus: 0.5
+    restart: unless-stopped
+    stop_grace_period: 10s

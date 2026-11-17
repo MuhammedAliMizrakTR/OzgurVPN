@@ -1,0 +1,15 @@
+{
+  "checked_on": "2026-11-14",
+  "sing_box": {
+    "version": "1.14.4",
+    "amd64_sha256": "699a1b510aa4396b2176d32d1181920399ebf1e267835da6f3b598d0f7c24968"
+  },
+  "zapret2": {
+    "version": "1.0.7",
+    "archive": "zapret2-v1.0.7.tar.gz",
+    "sha256": "547a5dce3f4820721a425680ea3f7f3971b7e9c772b8c795dd2d623148da0928",
+    "binary_sha256": "4bb2634f0266bcc3cbe5988f4fc8c5e824649dd11edc418e71a415096c2505b0",
+    "url": "https://github.com/bol-van/zapret2/releases/download/v1.0.7/zapret2-v1.0.7.tar.gz",
+    "prefix": "zapret2-v1.0.7"
+  }
+}

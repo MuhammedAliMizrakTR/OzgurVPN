@@ -1,0 +1,39 @@
+# ARCHIVE TEMPLATE: nested below free-vpn-engineering/, not a repository-root workflow.
+# Do not move/enable blindly; paths assume this subtree is the repository root.
+name: Test and build
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: '1.27.4'
+          cache: false
+      - name: Fetch checksum-locked official core
+        run: python3 scripts/fetch_core.py --dest .cache/sing-box
+      - name: Unit tests and core schema compatibility
+        env:
+          SING_BOX_TEST_BINARY: ${{ github.workspace }}/.cache/sing-box
+        run: |
+          go test -race -cover ./...
+          go vet ./...
+          python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Build gateway
+        run: go build -trimpath -o .cache/vpn-gateway ./cmd/gateway
+      - name: WSS end-to-end tests (uses example.com and public DNS)
+        run: python3 tests/e2e.py --gateway .cache/vpn-gateway --core .cache/sing-box
+      - name: Build real container
+        run: docker build --pull -t ozgurag:ci .
+      - name: Non-root, read-only container smoke test
+        run: python3 tests/docker_smoke.py --image ozgurag:ci

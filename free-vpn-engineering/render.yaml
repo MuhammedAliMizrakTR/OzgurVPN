@@ -1,0 +1,35 @@
+# Permission-gated prototype: read Render's AUP before deploying a proxy.
+# Paid compute removes idle spin-down, NOT AUP or bandwidth restrictions.
+services:
+  - type: web
+    name: ozgurag-gateway
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: CORE_PORT
+        value: "10001"
+      - key: TROJAN_PASSWORD
+        generateValue: true
+      - key: WS_PATH
+        value: /tunnel
+      - key: EGRESS_TCP_PORTS
+        value: "80,443"
+      - key: MAX_TUNNELS
+        value: "16"
+      - key: HANDSHAKES_PER_MINUTE
+        value: "60"
+      - key: HANDSHAKE_BURST
+        value: "20"
+      - key: TUNNEL_IDLE_TIMEOUT
+        value: 2m
+      - key: TUNNEL_MAX_AGE
+        value: 30m
+      - key: LOG_LEVEL
+        value: warn

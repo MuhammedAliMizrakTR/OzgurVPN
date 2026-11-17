@@ -1,0 +1,453 @@
+{
+  "schema": "mualiy-handoff-test-report-v1",
+  "documented_local_date": "2026-11-14",
+  "timezone": "Europe/Istanbul",
+  "date_scope": "Conversation local date; historical upload names/mtimes are not independently verified observation timestamps.",
+  "scope": "Fresh checks of the clean source tree in the Arena workspace. Not a VDS rollout, account mutation or device acceptance.",
+  "environment": {
+    "python": "3.13.18",
+    "go": "1.27.4 linux/amd64",
+    "yaml_parser": "PyYAML 6.0.3",
+    "docker_available": false,
+    "normal_uid": 1000,
+    "root_usage": "Only disposable bootstrap mock fixture and an early native-test root-refusal check; no VDS/root service operation."
+  },
+  "offline_python": {
+    "passed": 87,
+    "failed": 0,
+    "suites": [
+      {
+        "name": "publish_safety",
+        "cwd": "trojan-panel-plan",
+        "command": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_publish_safety.py",
+          "-v"
+        ],
+        "expected": 16,
+        "count": 16,
+        "passed": true,
+        "returncode": 0,
+        "duration_seconds": 0.14,
+        "scope": "temporary fixtures; Docker/systemd/network commands mocked"
+      },
+      {
+        "name": "cleanup",
+        "cwd": "trojan-panel-plan",
+        "command": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_cleanup.py",
+          "-v"
+        ],
+        "expected": 20,
+        "count": 20,
+        "passed": true,
+        "returncode": 0,
+        "duration_seconds": 0.13,
+        "scope": "temporary fixtures; Docker/systemd/network commands mocked"
+      },
+      {
+        "name": "bootstrap_mock",
+        "cwd": "trojan-panel-plan",
+        "command": [
+          "sudo",
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_bootstrap.py",
+          "-v"
+        ],
+        "expected": 14,
+        "count": 14,
+        "passed": true,
+        "returncode": 0,
+        "duration_seconds": 5.63,
+        "scope": "temporary fixtures; Docker/systemd/network commands mocked"
+      },
+      {
+        "name": "native_design_offline",
+        "cwd": "tr-vds-kurulum",
+        "command": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "test_offline.py",
+          "-v"
+        ],
+        "expected": 17,
+        "count": 17,
+        "passed": true,
+        "returncode": 0,
+        "duration_seconds": 0.15,
+        "scope": "temporary fixtures; Docker/systemd/network commands mocked"
+      },
+      {
+        "name": "preflight_mock",
+        "cwd": "vds-baslangic",
+        "command": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "test_preflight.py",
+          "-v"
+        ],
+        "expected": 8,
+        "count": 8,
+        "passed": true,
+        "returncode": 0,
+        "duration_seconds": 3.31,
+        "scope": "temporary fixtures; Docker/systemd/network commands mocked"
+      },
+      {
+        "name": "wss_helpers",
+        "cwd": "free-vpn-engineering",
+        "command": [
+          "python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_*.py",
+          "-v"
+        ],
+        "expected": 12,
+        "count": 12,
+        "passed": true,
+        "returncode": 0,
+        "duration_seconds": 0.13,
+        "scope": "temporary fixtures; Docker/systemd/network commands mocked"
+      }
+    ]
+  },
+  "go": {
+    "go_version": "go version go1.27.4 linux/amd64",
+    "core_version": "sing-box version 1.14.4",
+    "core_sha256": "1264361b5f8868c8768f7555d3e77e20118bf503c41ac08bb290a0d99056aa3a",
+    "core_provenance": "Previously checksum-verified official cached release; archive not downloaded again in handoff",
+    "checks": [
+      {
+        "name": "go_test_race_cover",
+        "command": [
+          "go",
+          "test",
+          "-race",
+          "-cover",
+          "-count=1",
+          "./..."
+        ],
+        "returncode": 0,
+        "passed": true,
+        "output": "example.com/free-vpn-engineering/cmd/gateway\t\tcoverage: 0.0% of statements\nok  \texample.com/free-vpn-engineering/internal/config\t1.896s\tcoverage: 93.5% of statements\nok  \texample.com/free-vpn-engineering/internal/gateway\t1.062s\tcoverage: 92.4% of statements",
+        "duration_seconds": 30.41
+      },
+      {
+        "name": "go_vet",
+        "command": [
+          "go",
+          "vet",
+          "./..."
+        ],
+        "returncode": 0,
+        "passed": true,
+        "output": "",
+        "duration_seconds": 10.39
+      },
+      {
+        "name": "go_build",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "<temporary-output>",
+          "./cmd/gateway"
+        ],
+        "returncode": 0,
+        "passed": true,
+        "output": "",
+        "duration_seconds": 13.85
+      }
+    ],
+    "core_schema_check_executed": true
+  },
+  "native_sui_fixture": {
+    "evidence_scope": "fresh disposable localhost fixture, not a VDS rollout",
+    "native_version": "S-UI 1.6.7 / embedded sing-box 1.14.4",
+    "binary_sha256": "f57c3bc95b490f1c3154c5013451d98b8e74426174fd688c85052ce338413a11",
+    "docker_tested": false,
+    "real_acme_tested": false,
+    "vds_changed": false,
+    "all_fixture_listeners_loopback": true,
+    "fixture_stopped": true,
+    "login_with_cookie_and_same_origin": true,
+    "consistent_sqlite_backup": true,
+    "api_tls_inbound_and_client_created": true,
+    "api_setup_idempotent": true,
+    "public_subscription_base_configured": true,
+    "tls_hostname_and_fixture_ca_verified": true,
+    "authenticated_trojan_tcp_echo": true,
+    "admin_password_unchanged": true,
+    "subscription_http_ok": true,
+    "subscription_base64_trojan_uri_verified": true,
+    "subscription_response_bytes": 272
+  },
+  "native_binary_provenance": {
+    "release": "https://github.com/alireza0/s-ui/releases/tag/v1.6.7",
+    "linux_amd64_archive_sha256": "7f6c6403eac713c2b08cd509540a9835596a7b4a79dedf23dfa71278d2f003c5",
+    "archive_rechecked_in_workspace_before_handoff": true,
+    "binary_sha256": "f57c3bc95b490f1c3154c5013451d98b8e74426174fd688c85052ce338413a11",
+    "binary_shipped": false,
+    "fixture_changes": "Explicit --binary/SUI_TEST_BINARY, exact hash, non-root, loopback-only temporary fixture, no historical-report overwrite."
+  },
+  "static_checks": [
+    {
+      "name": "python_ast_and_compilation",
+      "passed": true,
+      "count": 22,
+      "scope": "ast.parse + compile in memory; no pyc"
+    },
+    {
+      "name": "existing_json_parse",
+      "passed": true,
+      "count": 10
+    },
+    {
+      "name": "yaml_syntax",
+      "passed": true,
+      "count": 4,
+      "scope": "Parsing only; not Docker/GitHub/Render runtime/schema approval"
+    },
+    {
+      "name": "shell_and_passive_config_syntax",
+      "passed": true,
+      "count": 3
+    },
+    {
+      "name": "javascript_syntax",
+      "passed": true,
+      "count": 1
+    },
+    {
+      "name": "all_markdown_shell_fences_syntax_only",
+      "passed": true,
+      "count": 38
+    },
+    {
+      "name": "per_file_markdown_inventory",
+      "passed": true,
+      "count": 79,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "name": "no_symlinks_or_dependency_binary_files",
+      "passed": true,
+      "symlinks": [],
+      "max_file_bytes": 60027
+    },
+    {
+      "name": "publish_non_root_guard",
+      "passed": true,
+      "returncode": 1,
+      "scope": "non-root early refusal only; no VDS/Docker used"
+    },
+    {
+      "name": "cleanup_non_root_guard",
+      "passed": true,
+      "returncode": 1,
+      "scope": "non-root early refusal only; no VDS/Docker used"
+    },
+    {
+      "name": "bootstrap_non_root_guard",
+      "passed": true,
+      "returncode": 1,
+      "scope": "non-root early refusal only; no VDS/Docker used"
+    },
+    {
+      "name": "native_no_implicit_cached_binary",
+      "passed": true,
+      "returncode": 2
+    },
+    {
+      "name": "native_wrong_binary_hash_refused",
+      "passed": true,
+      "returncode": 2
+    },
+    {
+      "name": "native_root_refused",
+      "passed": true,
+      "returncode": 2
+    },
+    {
+      "name": "native_report_overwrite_refused",
+      "passed": true,
+      "returncode": 2
+    },
+    {
+      "name": "renewal_calendar_syntax_only",
+      "passed": true
+    },
+    {
+      "name": "gitignore_private_and_public_examples",
+      "passed": true,
+      "count": 26,
+      "private_blocked": 17,
+      "public_retained": 9
+    }
+  ],
+  "secret_review": {
+    "method": "Custom regex/entropy scan across every final UTF-8 file, hidden files included, plus manual review of matches and file inventory. Not a specialist scanner or an exhaustive independent security audit.",
+    "final_files_scanned": 79,
+    "patterns": [
+      "private_key_block",
+      "github_token",
+      "aws_access_key",
+      "gitlab_token",
+      "google_api_key",
+      "slack_token",
+      "telegram_bot_token",
+      "jwt",
+      "credential_url",
+      "literal_secret_assignment"
+    ],
+    "known_real_secret_matches_found": 0,
+    "unclassified_matches": 0,
+    "reviewed_synthetic_findings": [
+      {
+        "file": "free-vpn-engineering/tests/test_scripts.py",
+        "line": 76,
+        "category": "credential_url",
+        "value_redacted": true,
+        "classification": "synthetic test-only credential / negative URL fixture; reviewed in test source",
+        "real_operational_secret": false
+      },
+      {
+        "file": "free-vpn-engineering/tests/test_scripts.py",
+        "line": 15,
+        "category": "literal_secret_assignment",
+        "value_redacted": true,
+        "classification": "synthetic test-only credential / negative URL fixture; reviewed in test source",
+        "real_operational_secret": false
+      },
+      {
+        "file": "free-vpn-engineering/internal/config/config_test.go",
+        "line": 13,
+        "length": 32,
+        "entropy_rounded": 5.0,
+        "value_redacted": true,
+        "classification": "synthetic Go/Python test password constant; reviewed in test source",
+        "real_operational_secret": false
+      },
+      {
+        "file": "free-vpn-engineering/internal/config/config_test.go",
+        "line": 63,
+        "length": 32,
+        "entropy_rounded": 5.0,
+        "value_redacted": true,
+        "classification": "synthetic Go/Python test password constant; reviewed in test source",
+        "real_operational_secret": false
+      },
+      {
+        "file": "free-vpn-engineering/internal/config/config_test.go",
+        "line": 75,
+        "length": 32,
+        "entropy_rounded": 5.0,
+        "value_redacted": true,
+        "classification": "synthetic Go/Python test password constant; reviewed in test source",
+        "real_operational_secret": false
+      },
+      {
+        "file": "free-vpn-engineering/internal/gateway/server_test.go",
+        "line": 23,
+        "length": 32,
+        "entropy_rounded": 5.0,
+        "value_redacted": true,
+        "classification": "synthetic Go/Python test password constant; reviewed in test source",
+        "real_operational_secret": false
+      },
+      {
+        "file": "free-vpn-engineering/tests/test_scripts.py",
+        "line": 15,
+        "length": 33,
+        "entropy_rounded": 4.84,
+        "value_redacted": true,
+        "classification": "synthetic Go/Python test password constant; reviewed in test source",
+        "real_operational_secret": false
+      }
+    ],
+    "unexpected_binary_files": [],
+    "forbidden_paths_in_package": [],
+    "empty_template_kept": "free-vpn-engineering/.env.example",
+    "intentionally_public_context": [
+      "mualiy.net subdomains",
+      "38.210.77.17",
+      "neo",
+      "service names and /opt paths"
+    ],
+    "excluded_from_review_and_not_packaged": [
+      "raw uploads",
+      "workspace caches/config",
+      "live VDS databases/tokens/keys/client exports",
+      "any remote Git history"
+    ],
+    "guarantee_of_no_secrets": false
+  },
+  "unchanged_operational_sha256": {
+    "trojan-panel-plan/mualiy-yayinla.py": "347f20b5a4e3115891837a85b6a502e80100ef0235d5b6c6966152535efc8639",
+    "trojan-panel-plan/mualiy-eski-servis-temizle.py": "cc6e788ab286ecd83997872eccbd5837eccf5428274a6e5326162efab99d6bb8",
+    "trojan-panel-plan/mualiy-sui-panel.sh": "5a8196b98fd6a8bac3bf3ac80cae37849cc0007de7ff45bb7a29b7b0c72507a2",
+    "wattpad-inceleme/zapret2-wattpad-v1.0.7.conf": "73630be4566251163de982b4379efba224d5a567f7a2af83ea3c9a3ccb671b0d"
+  },
+  "final_package_checks": {
+    "files": 79,
+    "root_manifest_entries": 78,
+    "sub_manifests": {
+      "trojan-panel-plan/SHA256SUMS": 15,
+      "tr-vds-kurulum/SHA256SUMS": 11,
+      "vds-baslangic/SHA256SUMS": 5,
+      "free-vpn-engineering/PROJECT_MANIFEST.sha256": 37
+    },
+    "final_json_files_parsed": 11,
+    "all_files_described_once_in_readme": true,
+    "all_source_paths_preserved_except_documented_removed_duplicate": true,
+    "sha256_manifest_validation": "passed at final packaging",
+    "zip_crc_and_byte_for_byte_content_validation": "passed at final packaging",
+    "zip_layout": "Five original project directories and four root files; no extra wrapper directory, uploads, old ZIPs, caches, binaries or .git history."
+  },
+  "not_run_or_not_proven": [
+    "Assistant SSH/VDS inspection or execution; kernel/package/service health; independent reboot verification.",
+    "Docker/Compose build/run, real S-UI container mounts/UID/certificate/renewal integration.",
+    "Authenticated Cloudflare DNS/Access/Tunnel setup, real ACME or public TCP8443 ingress.",
+    "Fresh public DNS/Access probes; recorded public network observations are historical.",
+    "Actual Android MikuBox / Windows10/11 device-wide TUN, changed exit IP, DNS/IPv6/UDP/voice/game/stability.",
+    "Old WSS25 internet E2E, native15 network-namespace/NFQUEUE and3 local-internet tests were not rerun.",
+    "Fresh nfqws2 runtime dry-run or Docker-zapret2 egress acceptance.",
+    "Independent >=100GB foreign backup allocation, hosting permission and permitted Telegram/API renewal.",
+    "GitHub repository creation/push or enabled root Actions workflow."
+  ],
+  "handoff_state": "User reports Ubuntu26.04.1 upgrade and successful reboot, plus existing accessible Docker panel and changed admin password. No bootstrap/upgrade rerun. Next: minimal read-only health/current panel+port check, then existing publication path."
+}
