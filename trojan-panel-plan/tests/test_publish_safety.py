@@ -115,4 +115,35 @@ class SafetyTests(unittest.TestCase):
             def add(self,*a):raise AssertionError('must not mutate conflicting record')
         with self.assertRaises(m.Stop):m.configure_api(FakeAPI(),{'client_name':'fixture','trojan_password':'fixture'})
 
+    def test_first_trojan_client_is_created_before_inbound(self):
+        class FakeAPI:
+            def __init__(self):
+                self.events=[];self.clients=[];self.inbounds=[]
+                self.tls=[{'id':1,'name':m.TLS_NAME,'server':{
+                    'certificate_path':'/app/cert/mualiy-fullchain.pem',
+                    'key_path':'/app/cert/mualiy-privkey.pem'}}]
+            def items(self,kind):
+                return {'tls':self.tls,'clients':self.clients,'inbounds':self.inbounds}[kind]
+            def add(self,kind,obj,extra=None):
+                self.events.append((kind,extra))
+                if kind=='clients':
+                    self.clients.append(dict(obj,id=7))
+                elif kind=='inbounds':
+                    self.assert_init_user(extra)
+                    self.inbounds.append(dict(obj,id=9))
+                    self.clients[0]['inbounds']=[9]
+                else: raise AssertionError(kind)
+            def assert_init_user(self,extra):
+                if extra != {'initUsers':'7'}: raise AssertionError(extra)
+            def request(self,action,data=None):
+                if action=='settings': return {'subURI':''}
+                if action=='clients?id=7': return {'clients':[self.clients[0]]}
+                if action=='save': return None
+                raise AssertionError(action)
+        api=FakeAPI();state={'client_name':'fixture','trojan_password':'fixture-password'}
+        m.configure_api(api,state)
+        self.assertEqual(api.events,[('clients',None),('inbounds',{'initUsers':'7'})])
+        self.assertEqual(state['inbound_id'],9)
+        self.assertEqual(state['tls_id'],1)
+
 if __name__=='__main__':unittest.main(verbosity=2)

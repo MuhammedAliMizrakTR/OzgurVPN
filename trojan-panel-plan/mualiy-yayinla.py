@@ -187,9 +187,12 @@ class API:
     def items(self, kind):
         return (self.request(kind) or {}).get(kind) or []
 
-    def add(self, kind, obj):
+    def add(self, kind, obj, extra=None):
         print('Panel API: ' + kind + ' kaydi olusturuluyor...')
-        return self.request('save', {'object': kind, 'action': 'new', 'data': json.dumps(obj)})
+        payload = {'object': kind, 'action': 'new', 'data': json.dumps(obj)}
+        if extra:
+            payload.update(extra)
+        return self.request('save', payload)
 
 
 def configure_api(api, state, cert_path='/app/cert/mualiy-fullchain.pem', key_path='/app/cert/mualiy-privkey.pem', port=8443):
@@ -205,25 +208,41 @@ def configure_api(api, state, cert_path='/app/cert/mualiy-fullchain.pem', key_pa
     tls_rec = tls_records[0]
     if tls_rec['server'].get('certificate_path') != cert_path or tls_rec['server'].get('key_path') != key_path:
         raise Stop('Ayni adli TLS profili baska sertifika kullaniyor; uzerine yazilmadi.')
+    # S-UI starts a running inbound through sing-box before committing it. A
+    # fresh Trojan inbound needs its first user at that point, so create the
+    # client record first and pass its ID as initUsers while creating inbound.
+    # Creating the inbound with an empty user list can be rejected by a real
+    # running core even though a simplified local fixture accepts it.
     existing = [i for i in api.items('inbounds') if i['tag'] == TAG]
-    if not existing:
-        api.add('inbounds', {'type': 'trojan', 'tag': TAG, 'tls_id': tls_rec['id'],
-            'listen': '0.0.0.0', 'listen_port': port,
-            'addrs': [{'server': DOMAIN, 'server_port': port}], 'out_json': {}})
-        existing = [i for i in api.items('inbounds') if i['tag'] == TAG]
-    inbound = existing[0]
-    if inbound['type'] != 'trojan' or int(inbound['listen_port']) != port or inbound['tls_id'] != tls_rec['id']:
-        raise Stop('Ayni tag baska inbound icin kullaniliyor; degistirilmedi.')
+    if len(existing) > 1:
+        raise Stop('Ayni tagli birden fazla inbound var; degistirilmedi.')
     clients = [c for c in api.items('clients') if c['name'] == state['client_name']]
+    if len(clients) > 1:
+        raise Stop('Ayni adli birden fazla client var; degistirilmedi.')
     if not clients:
+        initial_inbounds = [existing[0]['id']] if existing else []
         api.add('clients', {'enable': True, 'name': state['client_name'],
             'remark': 'Mualiy', 'group': 'private', 'desc': 'Mualiy private Trojan',
             'config': {'trojan': {'name': state['client_name'], 'password': state['trojan_password']}},
-            'inbounds': [inbound['id']], 'links': [], 'volume': 0, 'expiry': 0})
-    else:
-        detail = api.request('clients?id=' + str(clients[0]['id']))['clients'][0]
-        if detail.get('config', {}).get('trojan', {}).get('password') != state['trojan_password'] or inbound['id'] not in detail.get('inbounds', []):
-            raise Stop('Var olan client kaydi beklenenden farkli; uzerine yazilmadi.')
+            'inbounds': initial_inbounds, 'links': [], 'volume': 0, 'expiry': 0})
+        clients = [c for c in api.items('clients') if c['name'] == state['client_name']]
+    if len(clients) != 1:
+        raise Stop('Beklenen tek Mualiy client kaydi olusturulamadi; degistirilmedi.')
+    client = clients[0]
+    if not existing:
+        api.add('inbounds', {'type': 'trojan', 'tag': TAG, 'tls_id': tls_rec['id'],
+            'listen': '0.0.0.0', 'listen_port': port,
+            'addrs': [{'server': DOMAIN, 'server_port': port}], 'out_json': {}},
+            {'initUsers': str(client['id'])})
+        existing = [i for i in api.items('inbounds') if i['tag'] == TAG]
+    if len(existing) != 1:
+        raise Stop('Beklenen tek Mualiy inbound kaydi olusturulamadi; degistirilmedi.')
+    inbound = existing[0]
+    if inbound['type'] != 'trojan' or int(inbound['listen_port']) != port or inbound['tls_id'] != tls_rec['id']:
+        raise Stop('Ayni tag baska inbound icin kullaniliyor; degistirilmedi.')
+    detail = api.request('clients?id=' + str(client['id']))['clients'][0]
+    if detail.get('config', {}).get('trojan', {}).get('password') != state['trojan_password'] or inbound['id'] not in detail.get('inbounds', []):
+        raise Stop('Var olan client kaydi beklenenden farkli; uzerine yazilmadi.')
     settings = api.request('settings')
     sub_uri = 'https://sub.mualiy.net/sub/'
     if settings.get('subURI', '') not in ('', sub_uri):
