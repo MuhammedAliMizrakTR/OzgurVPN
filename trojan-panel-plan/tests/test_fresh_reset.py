@@ -108,7 +108,7 @@ class FreshResetTests(unittest.TestCase):
         self.assertIsNotNone(api.http)
 
     def test_reset_publisher_pin_matches_current_publisher(self):
-        self.assertEqual(m.PUBLISHER_NAME, 'mualiy-yayinla-c1501cb8.py')
+        self.assertEqual(m.PUBLISHER_NAME, 'mualiy-yayinla-7e5d51de.py')
         self.assertEqual(m.PUBLISHER_SHA256, hashlib.sha256(PUBLISHER.read_bytes()).hexdigest())
 
     def test_no_secret_command_line_or_destructive_wildcard(self):

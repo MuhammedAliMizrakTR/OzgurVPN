@@ -121,7 +121,7 @@ Panel/abonelik HTTP'si Tunnel içindeki yerel origin içindir. Sıradan Trojan/T
 
 | Öğe | Kilit / SHA-256 |
 |---|---|
-| **Güncel yayın betiği** `trojan-panel-plan/mualiy-yayinla.py` | `c1501cb8dade1e8583f256b1f02dc2c69e02beb6f4ea603550ba59d42679ab17` |
+| **Güncel yayın betiği** `trojan-panel-plan/mualiy-yayinla.py` | `7e5d51dec9be2858abf5d6484602f2cf351b043c1fea77925f22929d7fb07f5e` |
 | Eski native temizliği `mualiy-eski-servis-temizle.py` | `cc6e788ab286ecd83997872eccbd5837eccf5428274a6e5326162efab99d6bb8` |
 | **Yeniden çalıştırılmayacak** bootstrap `mualiy-sui-panel.sh` | `5a8196b98fd6a8bac3bf3ac80cae37849cc0007de7ff45bb7a29b7b0c72507a2` |
 | S-UI image | `alireza7/s-ui:v1.6.7@sha256:c262ebd5cd53fd098d3080089af46220473bacbaf1a113e767aa9aadd2eed36d` |
@@ -186,7 +186,7 @@ Panel durmuşsa önce beklenen proje/compose/mount yapısını doğrula; yalnız
 Yalnız güncel dosya VDS'ye `/home/neo/mualiy-yayinla.py` olarak aktarıldıktan ve kısa durum/Cloudflare ön koşulları değerlendirildikten sonra:
 
 ```bash
-printf '%s\n' 'c1501cb8dade1e8583f256b1f02dc2c69e02beb6f4ea603550ba59d42679ab17  /home/neo/mualiy-yayinla.py' | sha256sum -c - &&
+printf '%s\n' '7e5d51dec9be2858abf5d6484602f2cf351b043c1fea77925f22929d7fb07f5e  /home/neo/mualiy-yayinla.py' | sha256sum -c - &&
 sudo python3 /home/neo/mualiy-yayinla.py --apply
 ```
 
@@ -347,7 +347,7 @@ repo-koku/
 | `ESKI_SERVIS_TEMIZLIGI.md` | KOŞULLU | Eski native kapsamı, korumalar, arşiv ve sınırlamalar; yayın öncesi gereksiz geniş temizlik kapısı değildir |
 | `mualiy-sui-panel.sh` | **ARŞİV — YENİDEN ÇALIŞTIRMA** | İlk loopback panelinin özgün kurucusu. Beklenen Compose/marker/UID yapısını denetleyebilmek ve fixture testleri için tutuldu; mevcut VDS'yi yeniden kurmak için değil |
 | `PANEL_ILK_ASAMA.md` | ARŞİV | İlk panelin mimari kayıt belgesi. Yeniden kurulum komutları/varsayılan parola çıkarıldı; DB/mount/restart:no gerekçesi ve açık tarihçe uyarısı kaldı |
-| `tests/test_publish_safety.py` | TEST |19 offline guard: doğru panel/port, local Docker socket, bilinmeyen port sahibine dokunmama, secret-file, TLS çakışması, Access/UA reddetme, ilk Trojan kullanıcısının inbound oluşturulurken eklenmesi ve kayıtsız core inbound'ının yalnız doğrulanmış panel yeniden başlatılarak temizlenmesi kontrolleri; geçici yol taşınabilir yapıldı |
+| `tests/test_publish_safety.py` | TEST |23 offline guard: doğru panel/port, local Docker socket, bilinmeyen port sahibine dokunmama, secret-file, TLS çakışması, Access/UA reddetme, ilk Trojan kullanıcısının inbound oluşturulurken eklenmesi, kayıtsız core inbound'ının yalnız doğrulanmış panel yeniden başlatılarak temizlenmesi ve cert/key metadata ile container içi okunabilirlik kontrolleri; geçici yol taşınabilir yapıldı |
 | `tests/test_termux_launcher.py` | TEST |GitHub erişimi/sudo olmadan fake `curl` ile başlatıcının SHA-256 doğrulamasını, dry-run'ın hedefe dokunmamasını ve TTY dışındaki yayının engellenmesini denetler |
 | `tests/test_fresh_reset.py` | TEST |Gerçek Docker/VDS kullanmadan reset aracının loopback compose yapısını, sahiplik işareti/mount korumalarını, arşivleyerek korumayı, yeni admin doğrulamasını, yayıncı SHA-256 pinini ve sır/tehlikeli silme korumalarını denetler |
 | `tests/test_publish_native.py` | TEST — AÇIK OPT-IN | Linux amd64, non-root gerçek native fixture; `--binary`/`SUI_TEST_BINARY`, kesin binary hash, loopback, geçici DB/CA ve isteğe bağlı **yeni** rapor. Binary indirmez, canlı VDS kullanmaz, tarihsel raporu ezmez |

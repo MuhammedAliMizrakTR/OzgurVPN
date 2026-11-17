@@ -19,6 +19,7 @@ import secrets
 import shutil
 import socket
 import ssl
+import stat
 import subprocess
 import sys
 import tempfile
@@ -39,6 +40,8 @@ TLS_NAME = 'mualiy-vpn-tls'
 CERTBOT = 'certbot/dns-cloudflare:v5.10.0@sha256:6d5e1e84f687ce81786c97cbeccb9dda94d86bbb29a81dbb85527bd68008d77d'
 CLOUDFLARED = 'cloudflare/cloudflared:2026.11.0@sha256:b94b96edf2c9c4360f8879c8580cfaa99077f19c849ec595ca2f711b27d4f344'
 PANEL_IMAGE = 'alireza7/s-ui:v1.6.7@sha256:c262ebd5cd53fd098d3080089af46220473bacbaf1a113e767aa9aadd2eed36d'
+PANEL_UID = 10001
+PANEL_GID = 10001
 BASE_URL = 'http://127.0.0.1:2095'
 
 
@@ -338,6 +341,29 @@ def certbot(action, email=None):
     command(args, timeout=900)
 
 
+def normalize_cert_directory():
+    cert_dir = ROOT / 'cert'
+    if cert_dir.is_symlink() or not cert_dir.is_dir():
+        raise Stop('Panel sertifika dizini beklenen normal dizin degil; degistirilmedi.')
+    current = cert_dir.stat()
+    if current.st_uid != 0 or current.st_gid != PANEL_GID or stat.S_IMODE(current.st_mode) != 0o750:
+        # This is the verified /app/cert bind source, not an arbitrary path.
+        os.chown(cert_dir, 0, PANEL_GID)
+        os.chmod(cert_dir, 0o750)
+
+
+def cert_file_needs_rewrite(path, contents):
+    if path.is_symlink():
+        raise Stop('Sertifika sembolik linkine yazilmayacak: ' + str(path))
+    if not path.exists():
+        return True
+    if not path.is_file():
+        raise Stop('Sertifika hedefi normal dosya degil: ' + str(path))
+    current = path.stat()
+    return (path.read_bytes() != contents or current.st_uid != 0 or
+            current.st_gid != PANEL_GID or stat.S_IMODE(current.st_mode) != 0o640)
+
+
 def deploy_cert():
     source = LIVE / 'letsencrypt/live' / DOMAIN
     cert, key = source / 'fullchain.pem', source / 'privkey.pem'
@@ -345,14 +371,23 @@ def deploy_cert():
     command(['openssl', 'x509', '-in', cert, '-noout', '-checkend', '86400'])
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.load_cert_chain(cert, key)  # Reject a mismatched key before replacing files.
+    normalize_cert_directory()
     changed = False
     for src, name in ((cert, 'mualiy-fullchain.pem'), (key, 'mualiy-privkey.pem')):
         dest = ROOT / 'cert' / name
         contents = src.read_bytes()
-        if not dest.exists() or dest.read_bytes() != contents:
-            private_write(dest, contents, 0o640, 10001)
+        if cert_file_needs_rewrite(dest, contents):
+            private_write(dest, contents, 0o640, PANEL_GID)
             changed = True
     return changed
+
+
+def ensure_panel_can_read_cert(cid):
+    result = command(['docker', 'exec', '--user', f'{PANEL_UID}:{PANEL_GID}', cid, 'sh', '-c',
+                      'test -r /app/cert/mualiy-fullchain.pem && test -r /app/cert/mualiy-privkey.pem'],
+                     check=False)
+    if result.returncode:
+        raise Stop('Panel sertifika/anahtar dosyalarini kendi kullanicisi ile okuyamiyor; inbound eklenmeden duruldu.')
 
 
 def test_tls():
@@ -491,6 +526,7 @@ def apply():
         command(['docker', 'pull', '--platform', 'linux/amd64', image], timeout=900)
     certbot('new', state['email'])
     deploy_cert()
+    ensure_panel_can_read_cert(cid)
     free_port_or_stop_old(cid)
     api = API(user, password)  # Refresh a session after a slow image/ACME download.
     if reconcile_core_if_missing_inbound(api, cid):
